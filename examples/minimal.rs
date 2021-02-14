@@ -1,5 +1,5 @@
-use bevy::app::AppExit;
-use bevy::prelude::*;
+use bevy_pixels::bevy::app::AppExit;
+use bevy_pixels::bevy::prelude::*;
 use bevy_pixels::{PixelsOptions, PixelsPlugin, PixelsResource};
 
 const WIDTH: u32 = 320;

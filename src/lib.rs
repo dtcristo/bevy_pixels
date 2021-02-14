@@ -1,3 +1,6 @@
+pub use bevy;
+pub use pixels;
+
 use bevy::prelude::*;
 use bevy::window::{
     WindowBackendScaleFactorChanged, WindowId, WindowRedrawRequested, WindowResized,
