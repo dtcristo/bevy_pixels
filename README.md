@@ -1,6 +1,6 @@
 # bevy_pixels
 
-[Bevy](https://github.com/bevyengine/bevy) plugin that uses [Pixels](https://github.com/parasyte/pixels) (a tiny frame buffer) for rendering.
+[Bevy](https://github.com/bevyengine/bevy) plugin that uses [Pixels](https://github.com/parasyte/pixels) (a tiny pixel buffer) for rendering.
 
 **Note:** Currently depends on a [fork of Bevy](https://github.com/dtcristo/bevy/tree/window-request-redraw) that adds `bevy::window::WindowRedrawRequested` and `bevy::window::Window::request_redraw`.
 
