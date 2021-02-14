@@ -1,6 +1,6 @@
 # bevy_pixels
 
-A [Bevy](https://github.com/bevyengine/bevy) plugin that connects the [pixels](https://github.com/parasyte/pixels) tiny hardware-accelerated pixel frame buffer.
+A [Bevy](https://github.com/bevyengine/bevy) plugin that integrates the [pixels](https://github.com/parasyte/pixels) tiny hardware-accelerated pixel frame buffer for rendering.
 
 ## Usage
 
