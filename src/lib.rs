@@ -1,5 +1,7 @@
 use bevy::prelude::*;
-use bevy::window::{WindowId, WindowResized};
+use bevy::window::{
+    WindowBackendScaleFactorChanged, WindowId, WindowRedrawRequested, WindowResized,
+};
 use bevy::winit::WinitWindows;
 use pixels::{Pixels, SurfaceTexture};
 
@@ -29,7 +31,9 @@ impl Plugin for PixelsPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.init_resource::<PixelsOptions>()
             .add_startup_system(Self::setup_system.system())
-            .add_system(Self::window_resize_system.system());
+            .add_system(Self::window_resize_system.system())
+            .add_system(Self::window_change_system.system())
+            .add_system(Self::window_redraw_system.system());
     }
 }
 
@@ -72,6 +76,35 @@ impl PixelsPlugin {
                 resource
                     .pixels
                     .resize(event.width as u32, event.height as u32);
+            }
+        }
+    }
+
+    pub fn window_change_system(
+        windows: Res<Windows>,
+        mut window_backend_scale_factor_changed_events: EventReader<
+            WindowBackendScaleFactorChanged,
+        >,
+        mut resource: ResMut<PixelsResource>,
+    ) {
+        for event in window_backend_scale_factor_changed_events.iter() {
+            if event.id == resource.window_id {
+                let window = windows.get(resource.window_id).unwrap();
+
+                resource
+                    .pixels
+                    .resize(window.physical_width(), window.physical_height());
+            }
+        }
+    }
+
+    pub fn window_redraw_system(
+        mut window_redraw_events: EventReader<WindowRedrawRequested>,
+        mut resource: ResMut<PixelsResource>,
+    ) {
+        for event in window_redraw_events.iter() {
+            if event.id == resource.window_id {
+                resource.pixels.render().expect("failed to render pixels");
             }
         }
     }

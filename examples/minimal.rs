@@ -19,30 +19,34 @@ fn main() {
             height: HEIGHT,
         })
         .add_plugins(DefaultPlugins)
-        .add_plugin(bevy::diagnostic::FrameTimeDiagnosticsPlugin::default())
-        .add_plugin(bevy::diagnostic::LogDiagnosticsPlugin::default())
         .add_plugin(PixelsPlugin)
         .insert_resource(World::new())
         .add_system(main_system.system())
-        .add_system(keyboard_input_system.system())
+        .add_system(exit_on_escape_system.system())
         .run();
 }
 
-fn keyboard_input_system(
+fn main_system(
+    mut world: ResMut<World>,
+    mut pixels_resource: ResMut<PixelsResource>,
+    mut windows: ResMut<Windows>,
+) {
+    world.update();
+
+    let pixels = &mut pixels_resource.pixels;
+    world.draw(pixels.get_frame());
+
+    let primary_window = windows.get_primary_mut().expect("primary window not found");
+    primary_window.request_redraw();
+}
+
+fn exit_on_escape_system(
     keyboard_input: Res<Input<KeyCode>>,
     mut app_exit_events: ResMut<Events<AppExit>>,
 ) {
     if keyboard_input.just_pressed(KeyCode::Escape) {
         app_exit_events.send(AppExit);
     }
-}
-
-fn main_system(mut world: ResMut<World>, mut pixels_resource: ResMut<PixelsResource>) {
-    world.update();
-
-    let pixels = &mut pixels_resource.pixels;
-    world.draw(pixels.get_frame());
-    pixels.render().expect("failed to render pixels");
 }
 
 /// Representation of the application state. In this example, a box will bounce around the screen.
