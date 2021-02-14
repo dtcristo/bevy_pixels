@@ -1,6 +1,6 @@
 [package]
 name = "bevy_pixels"
-description = "Integrates Bevy with Pixels tiny frame buffer for rendering"
+description = "Bevy plugin that uses Pixels (a tiny frame buffer) for rendering"
 version = "0.1.0"
 authors = ["David Cristofaro <david@dtcristo.com>"]
 edition = "2018"
