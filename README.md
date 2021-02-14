@@ -28,7 +28,7 @@ fn main() {
 Use `PixelsResource` in your systems.
 
 ```rust
-fn main_system(mut pixels_resource: ResMut<PixelsResource>, mut windows: ResMut<Windows>) {
+fn main_system(mut pixels_resource: ResMut<PixelsResource>) {
     // Get a mutable slice for the pixel buffer
     let pixel_buffer: &mut [u8] = pixels_resource.pixels.get_frame();
 
