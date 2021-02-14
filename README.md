@@ -6,7 +6,7 @@ A [Bevy](https://github.com/bevyengine/bevy) plugin that connects the [pixels](h
 
 ### Hello Bevy Pixels
 
-This example is based off [`minimal-winit`](https://github.com/parasyte/pixels/tree/master/examples/minimal-winit) example the pixels project.
+This example is based off [`minimal-winit`](https://github.com/parasyte/pixels/tree/master/examples/minimal-winit) example from the pixels project.
 
 ```sh
 cargo run --release --example minimal
