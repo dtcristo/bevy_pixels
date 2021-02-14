@@ -55,7 +55,7 @@ cargo run --release --example minimal
 
 ## TODO
 
-- Remove need for fork of Bevy.
+- Remove need for fork of Bevy - see [here](https://github.com/bevyengine/bevy/pull/1445).
 - Add more configuration around how rendering is performed.
 - Add support for multiple windows.
 - Improve minimal example.
