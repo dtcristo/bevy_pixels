@@ -31,13 +31,14 @@ fn main_system(
     mut pixels_resource: ResMut<PixelsResource>,
     mut windows: ResMut<Windows>,
 ) {
+    // Update internal state
     world.update();
 
-    let pixels = &mut pixels_resource.pixels;
-    world.draw(pixels.get_frame());
+    // Draw world into pixel buffer
+    world.draw(pixels_resource.pixels.get_frame());
 
-    let primary_window = windows.get_primary_mut().expect("primary window not found");
-    primary_window.request_redraw();
+    // Request a redraw of primary window
+    windows.get_primary_mut().unwrap().request_redraw();
 }
 
 fn exit_on_escape_system(
