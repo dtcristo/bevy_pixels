@@ -1,6 +1,5 @@
-use bevy_pixels::bevy::app::AppExit;
-use bevy_pixels::bevy::prelude::*;
-use bevy_pixels::{PixelsOptions, PixelsPlugin, PixelsResource};
+use bevy::app::AppExit;
+use bevy_pixels::prelude::*;
 
 const WIDTH: u32 = 320;
 const HEIGHT: u32 = 240;
@@ -21,24 +20,20 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(PixelsPlugin)
         .insert_resource(World::new())
-        .add_system(main_system.system())
+        .add_system(world_update_system.system())
+        .add_system_to_stage(bevy_pixels::stage::DRAW, world_draw_system.system())
         .add_system(exit_on_escape_system.system())
         .run();
 }
 
-fn main_system(
-    mut world: ResMut<World>,
-    mut pixels_resource: ResMut<PixelsResource>,
-    mut windows: ResMut<Windows>,
-) {
+fn world_update_system(mut world: ResMut<World>) {
     // Update internal state
     world.update();
+}
 
+fn world_draw_system(world: ResMut<World>, mut pixels_resource: ResMut<PixelsResource>) {
     // Draw world into pixel buffer
     world.draw(pixels_resource.pixels.get_frame());
-
-    // Request a redraw of primary window
-    windows.get_primary_mut().unwrap().request_redraw();
 }
 
 fn exit_on_escape_system(

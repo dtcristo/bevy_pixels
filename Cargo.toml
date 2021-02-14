@@ -11,8 +11,7 @@ keywords = ["gamedev", "graphics", "bevy", "pixels", "2d", "framebuffer"]
 categories = ["game-engines", "graphics", "rendering"]
 
 [dependencies.bevy]
-git = "https://github.com/dtcristo/bevy"
-branch = "window-request-redraw"
+git = "https://github.com/bevyengine/bevy"
 default-features = false
 features = ["bevy_winit"]
 

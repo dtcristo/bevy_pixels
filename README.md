@@ -2,11 +2,9 @@
 
 [Bevy](https://github.com/bevyengine/bevy) plugin that uses [Pixels](https://github.com/parasyte/pixels) (a tiny pixel buffer) for rendering.
 
-**Note:** Currently depends on a [fork of Bevy](https://github.com/dtcristo/bevy/tree/window-request-redraw) that adds `bevy::window::WindowRedrawRequested` and `bevy::window::Window::request_redraw`.
-
 ## Usage
 
-Add `bevy_pixels` to `Cargo.toml`. If depending on `bevy` directly, be sure to disable `bevy_wgpu` (using `default-features = false`) as it might conflict with rendering provided by `bevy_pixels`.
+Add `bevy_pixels` to `Cargo.toml`. If depending on `bevy` directly, be sure to disable `render` and `bevy_wgpu` features (with `default-features = false`) as they will conflict with rendering provided by `bevy_pixels`.
 
 ```toml
 [dependencies]
@@ -16,8 +14,7 @@ bevy_pixels = { git = "https://github.com/dtcristo/bevy_pixels" }
 Add `PixelsPlugin` to your Bevy project.
 
 ```rust
-use bevy_pixels::bevy::prelude::*;
-use bevy_pixels::{PixelsPlugin, PixelsResource};
+use bevy_pixels::prelude::*;
 
 fn main() {
     App::build()
@@ -32,14 +29,11 @@ Use `PixelsResource` in your systems.
 
 ```rust
 fn main_system(mut pixels_resource: ResMut<PixelsResource>, mut windows: ResMut<Windows>) {
-    // Get a mutable slice into the pixel buffer
+    // Get a mutable slice for the pixel buffer
     let pixel_buffer: &mut [u8] = pixels_resource.pixels.get_frame();
 
     // Fill pixel buffer with pixel data
     // ...
-
-    // Request a redraw of primary window
-    windows.get_primary_mut().unwrap().request_redraw();
 }
 ```
 
@@ -55,7 +49,6 @@ cargo run --release --example minimal
 
 ## TODO
 
-- Remove need for fork of Bevy - see [here](https://github.com/bevyengine/bevy/pull/1445).
 - Add more configuration around how rendering is performed.
 - Add support for multiple windows.
 - Improve minimal example.

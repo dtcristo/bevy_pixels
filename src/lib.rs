@@ -2,15 +2,29 @@ pub use bevy;
 pub use pixels;
 
 use bevy::prelude::*;
-use bevy::window::{
-    WindowBackendScaleFactorChanged, WindowId, WindowRedrawRequested, WindowResized,
-};
+use bevy::window::{WindowBackendScaleFactorChanged, WindowId, WindowResized};
 use bevy::winit::WinitWindows;
 use pixels::{Pixels, SurfaceTexture};
 
+/// The names of App stages
+pub mod stage {
+    pub const DRAW: &str = "draw";
+    pub const RENDER: &str = "render";
+    pub const POST_RENDER: &str = "post_render";
+}
+
+pub mod prelude {
+    pub use crate::{PixelsOptions, PixelsPlugin, PixelsResource};
+    pub use bevy;
+    pub use bevy::prelude::*;
+    pub use pixels;
+}
+
 #[derive(Debug, Clone)]
 pub struct PixelsOptions {
+    /// Width of the pixel buffer
     pub width: u32,
+    /// Height of the pixel buffer
     pub height: u32,
 }
 
@@ -32,11 +46,18 @@ pub struct PixelsPlugin;
 
 impl Plugin for PixelsPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.init_resource::<PixelsOptions>()
-            .add_startup_system(Self::setup_system.system())
-            .add_system(Self::window_resize_system.system())
-            .add_system(Self::window_change_system.system())
-            .add_system(Self::window_redraw_system.system());
+        app.add_stage_after(
+            bevy::app::stage::POST_UPDATE,
+            stage::DRAW,
+            SystemStage::parallel(),
+        )
+        .add_stage_after(stage::DRAW, stage::RENDER, SystemStage::parallel())
+        .add_stage_after(stage::RENDER, stage::POST_RENDER, SystemStage::parallel())
+        .init_resource::<PixelsOptions>()
+        .add_startup_system(Self::setup_system.system())
+        .add_system(Self::window_resize_system.system())
+        .add_system(Self::window_change_system.system())
+        .add_system_to_stage(stage::RENDER, Self::render_system.system());
     }
 }
 
@@ -99,14 +120,7 @@ impl PixelsPlugin {
         }
     }
 
-    pub fn window_redraw_system(
-        mut window_redraw_events: EventReader<WindowRedrawRequested>,
-        mut resource: ResMut<PixelsResource>,
-    ) {
-        for event in window_redraw_events.iter() {
-            if event.id == resource.window_id {
-                resource.pixels.render().expect("failed to render pixels");
-            }
-        }
+    pub fn render_system(mut resource: ResMut<PixelsResource>) {
+        resource.pixels.render().expect("failed to render pixels");
     }
 }
