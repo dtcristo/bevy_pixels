@@ -43,7 +43,7 @@ fn main_system(mut pixels_resource: ResMut<PixelsResource>, mut windows: ResMut<
 
 ## Examples
 
-### Hello Bevy Pixels
+### [Hello Bevy Pixels](https://github.com/dtcristo/bevy_pixels/blob/main/examples/minimal.rs)
 
 This example is based off [`minimal-winit`](https://github.com/parasyte/pixels/tree/master/examples/minimal-winit) example from the pixels project.
 
