@@ -6,7 +6,7 @@ A [Bevy](https://github.com/bevyengine/bevy) plugin that connects the [pixels](h
 
 Add `bevy_pixels` to `Cargo.toml`.
 
-```
+```toml
 [dependencies]
 bevy_pixels = { git = "https://github.com/dtcristo/bevy_pixels" }
 ```
