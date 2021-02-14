@@ -1,10 +1,12 @@
 # bevy_pixels
 
-A [Bevy](https://github.com/bevyengine/bevy) plugin that integrates the [pixels](https://github.com/parasyte/pixels) tiny hardware-accelerated pixel frame buffer for rendering.
+A [Bevy](https://github.com/bevyengine/bevy) plugin that integrates [Pixels](https://github.com/parasyte/pixels) tiny frame buffer for rendering.
+
+**Note:** Currently depends on a [fork of Bevy](https://github.com/dtcristo/bevy) that adds `bevy::window::WindowRedrawRequested` and `bevy::window::Window::request_redraw`.
 
 ## Usage
 
-Add `bevy_pixels` to `Cargo.toml`.
+Add `bevy_pixels` to `Cargo.toml`. If depending on `bevy` directly, be sure to disable `bevy_wgpu` (using `default-features = false`) as it might conflict with rendering provided by `bevy_pixels`.
 
 ```toml
 [dependencies]
@@ -50,3 +52,11 @@ This example is based off [`minimal-winit`](https://github.com/parasyte/pixels/t
 ```sh
 cargo run --release --example minimal
 ```
+
+## TODO
+
+- Remove need for fork of Bevy.
+- Add more configuration around how rendering is performed.
+- Add support for multiple windows.
+- Improve minimal example.
+- Publish to crates.io.
