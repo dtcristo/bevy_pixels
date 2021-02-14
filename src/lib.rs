@@ -44,8 +44,6 @@ impl PixelsPlugin {
         windows: Res<Windows>,
         winit_windows: Res<WinitWindows>,
     ) {
-        dbg!(&options);
-
         let primary_window_id = windows
             .get_primary()
             .expect("primary window not found")
