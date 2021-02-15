@@ -1,6 +1,11 @@
-# bevy_pixels
-
-[Bevy](https://github.com/bevyengine/bevy) plugin that uses [Pixels](https://github.com/parasyte/pixels) (a tiny pixel buffer) for rendering.
+<div align="center">
+  <h1>bevy_pixels</h1>
+  <p>
+    <strong>
+      <a href="https://github.com/bevyengine/bevy">Bevy</a> plugin that uses <a href="https://github.com/parasyte/pixels">Pixels</a> (a tiny pixel buffer) for rendering
+    </strong>
+  </p>
+</div>
 
 ## Usage
 
