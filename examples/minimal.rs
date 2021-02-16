@@ -15,8 +15,8 @@ struct ObjectBundle {
 
 #[derive(Debug)]
 struct Position {
-    x: i16,
-    y: i16,
+    x: u32,
+    y: u32,
 }
 
 #[derive(Debug)]
@@ -78,16 +78,16 @@ fn setup_system(commands: &mut Commands) {
 
 fn bounce_system(mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>) {
     for (position, mut velocity, size, mut color) in query.iter_mut() {
-        let mut bounced = false;
-        if position.x <= 0 || position.x + size.width as i16 > WIDTH as i16 {
+        let mut bounce = false;
+        if position.x <= 0 || position.x + size.width > WIDTH {
             velocity.x *= -1;
-            bounced = true;
+            bounce = true;
         }
-        if position.y <= 0 || position.y + size.height as i16 > HEIGHT as i16 {
+        if position.y <= 0 || position.y + size.height > HEIGHT {
             velocity.y *= -1;
-            bounced = true;
+            bounce = true;
         }
-        if bounced {
+        if bounce {
             color.0 = random();
             color.1 = random();
             color.2 = random();
@@ -97,8 +97,8 @@ fn bounce_system(mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>
 
 fn movement_system(mut query: Query<(&mut Position, &Velocity)>) {
     for (mut position, velocity) in query.iter_mut() {
-        position.x += velocity.x;
-        position.y += velocity.y;
+        position.x = (position.x as i16 + velocity.x) as u32;
+        position.y = (position.y as i16 + velocity.y) as u32;
     }
 }
 
@@ -124,13 +124,13 @@ fn draw_objects_system(
     for (position, size, color) in query.iter() {
         // TODO: Make this way more efficient
         for (i, pixel) in frame.chunks_exact_mut(4).enumerate() {
-            let x = (i % WIDTH as usize) as i16;
-            let y = (i / WIDTH as usize) as i16;
+            let x = i as u32 % WIDTH;
+            let y = i as u32 / WIDTH;
 
             let inside_object = x >= position.x
-                && x < position.x + size.width as i16
+                && x < position.x + size.width
                 && y >= position.y
-                && y < position.y + size.height as i16;
+                && y < position.y + size.height;
 
             if inside_object {
                 pixel.copy_from_slice(&[color.0, color.1, color.2, color.3]);
