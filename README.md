@@ -35,9 +35,9 @@ Use `PixelsResource` in your systems.
 ```rust
 fn main_system(mut pixels_resource: ResMut<PixelsResource>) {
     // Get a mutable slice for the pixel buffer
-    let pixel_buffer: &mut [u8] = pixels_resource.pixels.get_frame();
+    let frame: &mut [u8] = pixels_resource.pixels.get_frame();
 
-    // Fill pixel buffer with pixel data
+    // Fill frame with pixel data
     // ...
 }
 ```
@@ -52,9 +52,10 @@ This example is based off [`minimal-winit`](https://github.com/parasyte/pixels/t
 cargo run --release --example minimal
 ```
 
-## TODO
+![minimal example](images/minimal.png)
+
+## Todo
 
 - Add more configuration around how rendering is performed.
 - Add support for multiple windows.
-- Improve minimal example.
 - Publish to crates.io.

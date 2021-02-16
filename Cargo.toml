@@ -9,11 +9,15 @@ readme = "README.md"
 repository = "https://github.com/dtcristo/bevy_pixels"
 keywords = ["gamedev", "graphics", "bevy", "pixels", "2d", "framebuffer"]
 categories = ["game-engines", "graphics", "rendering"]
+exclude = ["images/**/*"]
 
 [dependencies.bevy]
 git = "https://github.com/bevyengine/bevy"
 default-features = false
 features = ["bevy_winit"]
 
-[dependencies.pixels]
-git = "https://github.com/parasyte/pixels"
+[dependencies]
+pixels = { git = "https://github.com/parasyte/pixels" }
+
+[dev-dependencies]
+rand = "0.8.0"
