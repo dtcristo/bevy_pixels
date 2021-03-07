@@ -121,20 +121,19 @@ fn draw_objects_system(
     query: Query<(&Position, &Size, &Color)>,
 ) {
     let frame = pixels_resource.pixels.get_frame();
+    let frame_width_bytes = (WIDTH * 4) as usize;
+
     for (position, size, color) in query.iter() {
-        // TODO: Make this way more efficient
-        for (i, pixel) in frame.chunks_exact_mut(4).enumerate() {
-            let x = i as u32 % WIDTH;
-            let y = i as u32 / WIDTH;
+        let x_offset = (position.x * 4) as usize;
+        let width_bytes = (size.width * 4) as usize;
+        let object_row = &[color.0, color.1, color.2, color.3].repeat(size.width as usize);
 
-            let inside_object = x >= position.x
-                && x < position.x + size.width
-                && y >= position.y
-                && y < position.y + size.height;
+        for y in position.y..(position.y + size.height - 1) {
+            let y_offset = y as usize * frame_width_bytes;
+            let i = y_offset + x_offset;
+            let j = i + width_bytes;
 
-            if inside_object {
-                pixel.copy_from_slice(&[color.0, color.1, color.2, color.3]);
-            }
+            frame[i..j].copy_from_slice(object_row);
         }
     }
 }
