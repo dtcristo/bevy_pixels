@@ -6,15 +6,15 @@ use bevy::window::{WindowBackendScaleFactorChanged, WindowId, WindowResized};
 use bevy::winit::WinitWindows;
 use pixels::{Pixels, SurfaceTexture};
 
-/// The names of App stages
-pub mod stage {
-    pub const DRAW: &str = "draw";
-    pub const RENDER: &str = "render";
-    pub const POST_RENDER: &str = "post_render";
+#[derive(Debug, Hash, PartialEq, Eq, Clone, StageLabel)]
+pub enum PixelsStage {
+    Draw,
+    Render,
+    PostRender,
 }
 
 pub mod prelude {
-    pub use crate::{PixelsOptions, PixelsPlugin, PixelsResource};
+    pub use crate::{PixelsOptions, PixelsPlugin, PixelsResource, PixelsStage};
     pub use bevy;
     pub use bevy::prelude::*;
     pub use pixels;
@@ -47,23 +47,31 @@ pub struct PixelsPlugin;
 impl Plugin for PixelsPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_stage_after(
-            bevy::app::stage::POST_UPDATE,
-            stage::DRAW,
+            CoreStage::PostUpdate,
+            PixelsStage::Draw,
             SystemStage::parallel(),
         )
-        .add_stage_after(stage::DRAW, stage::RENDER, SystemStage::parallel())
-        .add_stage_after(stage::RENDER, stage::POST_RENDER, SystemStage::parallel())
+        .add_stage_after(
+            PixelsStage::Draw,
+            PixelsStage::Render,
+            SystemStage::parallel(),
+        )
+        .add_stage_after(
+            PixelsStage::Render,
+            PixelsStage::PostRender,
+            SystemStage::parallel(),
+        )
         .init_resource::<PixelsOptions>()
         .add_startup_system(Self::setup_system.system())
         .add_system(Self::window_resize_system.system())
         .add_system(Self::window_change_system.system())
-        .add_system_to_stage(stage::RENDER, Self::render_system.system());
+        .add_system_to_stage(PixelsStage::Render, Self::render_system.system());
     }
 }
 
 impl PixelsPlugin {
     pub fn setup_system(
-        commands: &mut Commands,
+        mut commands: Commands,
         options: Res<PixelsOptions>,
         windows: Res<Windows>,
         winit_windows: Res<WinitWindows>,

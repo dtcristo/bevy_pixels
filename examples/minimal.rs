@@ -34,6 +34,12 @@ struct Size {
 #[derive(Debug)]
 struct Color(u8, u8, u8, u8);
 
+#[derive(Debug, Hash, PartialEq, Eq, Clone, StageLabel)]
+enum AppStage {
+    DrawBackground,
+    DrawObjects,
+}
+
 fn main() {
     App::build()
         .insert_resource(WindowDescriptor {
@@ -53,17 +59,21 @@ fn main() {
         .add_system(movement_system.system())
         .add_system(exit_on_escape_system.system())
         .add_stage_after(
-            bevy_pixels::stage::DRAW,
-            "draw_background",
+            PixelsStage::Draw,
+            AppStage::DrawBackground,
             SystemStage::parallel(),
         )
-        .add_stage_after("draw_background", "draw_objects", SystemStage::parallel())
-        .add_system_to_stage("draw_background", draw_background_system.system())
-        .add_system_to_stage("draw_objects", draw_objects_system.system())
+        .add_stage_after(
+            AppStage::DrawBackground,
+            AppStage::DrawObjects,
+            SystemStage::parallel(),
+        )
+        .add_system_to_stage(AppStage::DrawBackground, draw_background_system.system())
+        .add_system_to_stage(AppStage::DrawObjects, draw_objects_system.system())
         .run();
 }
 
-fn setup_system(commands: &mut Commands) {
+fn setup_system(mut commands: Commands) {
     let box_object = ObjectBundle {
         position: Position { x: 24, y: 16 },
         velocity: Velocity { x: 1, y: 1 },
@@ -73,7 +83,7 @@ fn setup_system(commands: &mut Commands) {
         },
         color: Color(0x5e, 0x48, 0xe8, 0xff),
     };
-    commands.spawn(box_object);
+    commands.spawn().insert_bundle(box_object);
 }
 
 fn bounce_system(mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>) {
@@ -104,7 +114,7 @@ fn movement_system(mut query: Query<(&mut Position, &Velocity)>) {
 
 fn exit_on_escape_system(
     keyboard_input: Res<Input<KeyCode>>,
-    mut app_exit_events: ResMut<Events<AppExit>>,
+    mut app_exit_events: EventWriter<AppExit>,
 ) {
     if keyboard_input.just_pressed(KeyCode::Escape) {
         app_exit_events.send(AppExit);
