@@ -1,4 +1,5 @@
 use bevy::app::AppExit;
+use bevy::window::WindowResizeConstraints;
 use bevy_pixels::prelude::*;
 use rand::prelude::*;
 
@@ -46,6 +47,11 @@ fn main() {
             title: "Hello Bevy Pixels".to_string(),
             width: WIDTH as f32,
             height: HEIGHT as f32,
+            resize_constraints: WindowResizeConstraints {
+                min_width: WIDTH as f32,
+                min_height: HEIGHT as f32,
+                ..Default::default()
+            },
             ..Default::default()
         })
         .insert_resource(PixelsOptions {

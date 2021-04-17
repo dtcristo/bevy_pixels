@@ -31,8 +31,8 @@ pub struct PixelsOptions {
 impl Default for PixelsOptions {
     fn default() -> Self {
         PixelsOptions {
-            width: 1280,
-            height: 720,
+            width: 180,
+            height: 120,
         }
     }
 }
