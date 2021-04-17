@@ -105,7 +105,7 @@ impl PixelsPlugin {
             if event.id == resource.window_id {
                 resource
                     .pixels
-                    .resize(event.width as u32, event.height as u32);
+                    .resize_surface(event.width as u32, event.height as u32);
             }
         }
     }
@@ -123,7 +123,7 @@ impl PixelsPlugin {
 
                 resource
                     .pixels
-                    .resize(window.physical_width(), window.physical_height());
+                    .resize_surface(window.physical_width(), window.physical_height());
             }
         }
     }
