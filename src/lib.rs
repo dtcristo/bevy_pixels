@@ -1,10 +1,12 @@
 pub use bevy;
 pub use pixels;
 
+use bevy::diagnostic::{Diagnostic, DiagnosticId, Diagnostics};
 use bevy::prelude::*;
 use bevy::window::{WindowBackendScaleFactorChanged, WindowId, WindowResized};
 use bevy::winit::WinitWindows;
 use pixels::{Pixels, SurfaceTexture};
+use std::time::Instant;
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, StageLabel)]
 pub enum PixelsStage {
@@ -70,12 +72,18 @@ impl Plugin for PixelsPlugin {
 }
 
 impl PixelsPlugin {
+    pub const RENDER_TIME: DiagnosticId =
+        DiagnosticId::from_u128(1187582084072339577959028643519383692);
+
     pub fn setup_system(
         mut commands: Commands,
+        mut diagnostics: ResMut<Diagnostics>,
         options: Res<PixelsOptions>,
         windows: Res<Windows>,
         winit_windows: Res<WinitWindows>,
     ) {
+        diagnostics.add(Diagnostic::new(Self::RENDER_TIME, "render_time", 20).with_suffix("s"));
+
         let primary_window_id = windows
             .get_primary()
             .expect("primary window not found")
@@ -128,7 +136,16 @@ impl PixelsPlugin {
         }
     }
 
-    pub fn render_system(mut resource: ResMut<PixelsResource>) {
+    pub fn render_system(
+        mut resource: ResMut<PixelsResource>,
+        mut diagnostics: ResMut<Diagnostics>,
+    ) {
+        let start = Instant::now();
+
         resource.pixels.render().expect("failed to render pixels");
+
+        let end = Instant::now();
+        let render_time = end.duration_since(start);
+        diagnostics.add_measurement(Self::RENDER_TIME, render_time.as_secs_f64());
     }
 }
