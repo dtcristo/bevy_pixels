@@ -1,8 +1,12 @@
 <div align="center">
-  <h1>bevy_pixels</h1>
+  <h1>
+    <img src="images/logo.png" /><br />
+    bevy_pixels
+  </h1>
   <p>
     <strong>
-      <a href="https://github.com/bevyengine/bevy">Bevy</a> plugin that uses <a href="https://github.com/parasyte/pixels">Pixels</a> (a tiny pixel buffer) for rendering
+      <a href="https://github.com/bevyengine/bevy">Bevy</a> plugin that uses
+      <a href="https://github.com/parasyte/pixels">Pixels</a> (a tiny pixel buffer) for rendering
     </strong>
   </p>
 </div>
