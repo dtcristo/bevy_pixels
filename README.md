@@ -9,6 +9,19 @@
       <a href="https://github.com/parasyte/pixels">Pixels</a> (a tiny pixel buffer) for rendering
     </strong>
   </p>
+  <p>
+    <a href="https://crates.io/crates/bevy_pixels">
+      <img src="https://img.shields.io/crates/v/bevy_pixels.svg" alt="crates.io" />
+    </a>
+    <a
+      href="https://github.com/bevyengine/bevy/blob/main/docs/plugins_guidelines.md#main-branch-tracking"
+    >
+      <img
+        src="https://img.shields.io/badge/Bevy%20tracking-released%20version-lightblue"
+        alt="Bevy tracking"
+      />
+    </a>
+  </p>
 </div>
 
 ## Usage
@@ -46,6 +59,12 @@ fn main_system(mut pixels_resource: ResMut<PixelsResource>) {
 }
 ```
 
+## Bevy Version Supported
+
+| bevy | bevy_pixels |
+| ---- | ----------- |
+| 0.5  | 0.1         |
+
 ## Examples
 
 ### [Hello Bevy Pixels](https://github.com/dtcristo/bevy_pixels/blob/main/examples/minimal.rs)
@@ -62,4 +81,3 @@ cargo run --release --example minimal
 
 - Add more configuration around how rendering is performed.
 - Add support for multiple windows.
-- Publish to crates.io.
