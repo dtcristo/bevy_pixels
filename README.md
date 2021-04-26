@@ -79,5 +79,6 @@ cargo run --release --example minimal
 
 ## Todo
 
+- Publish to crates.io.
 - Add more configuration around how rendering is performed.
 - Add support for multiple windows.
