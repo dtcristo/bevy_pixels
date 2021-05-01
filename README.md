@@ -30,7 +30,7 @@ Add `bevy_pixels` to `Cargo.toml`. If depending on `bevy` directly, be sure to d
 
 ```toml
 [dependencies]
-bevy_pixels = { git = "https://github.com/dtcristo/bevy_pixels" }
+bevy_pixels = { git = "https://github.com/dtcristo/bevy_pixels", branch = "main" }
 ```
 
 Add `PixelsPlugin` to your Bevy project.
