@@ -7,7 +7,7 @@ edition = "2018"
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/dtcristo/bevy_pixels"
-keywords = ["gamedev", "graphics", "bevy", "pixels", "2d", "framebuffer"]
+keywords = ["bevy", "pixels", "graphics", "2d", "framebuffer"]
 categories = ["game-engines", "graphics", "rendering"]
 exclude = ["images/**/*"]
 

@@ -26,16 +26,18 @@
 
 ## Usage
 
-Add `bevy_pixels` to `Cargo.toml`. If depending on `bevy` directly, be sure to disable `render` and `bevy_wgpu` features (with `default-features = false`) as they will conflict with rendering provided by `bevy_pixels`.
+Add `bevy` and `bevy_pixels` to `Cargo.toml`. Be sure to disable `bevy`'s `render` and `bevy_wgpu` features (with `default-features = false`) as they will conflict with rendering provided by `bevy_pixels`.
 
 ```toml
 [dependencies]
-bevy_pixels = { git = "https://github.com/dtcristo/bevy_pixels", branch = "main" }
+bevy = { version = "0.5", default_features = false }
+bevy_pixels = "0.1"
 ```
 
 Add `PixelsPlugin` to your Bevy project.
 
 ```rust
+use bevy::prelude::*;
 use bevy_pixels::prelude::*;
 
 fn main() {
@@ -79,6 +81,5 @@ cargo run --release --example minimal
 
 ## Todo
 
-- Publish to crates.io.
 - Add more configuration around how rendering is performed.
 - Add support for multiple windows.
