@@ -11,14 +11,9 @@ keywords = ["gamedev", "graphics", "bevy", "pixels", "2d", "framebuffer"]
 categories = ["game-engines", "graphics", "rendering"]
 exclude = ["images/**/*"]
 
-[dependencies.bevy]
-version = "0.5"
-default-features = false
-features = ["bevy_winit"]
-
-[dependencies.pixels]
-git = "https://github.com/parasyte/pixels"
-rev = "9bfed17a7f51733f9042b3b524405229c628003b"
+[dependencies]
+bevy = { version = "0.5", default_features = false, features = ["bevy_winit"] }
+pixels = "0.3"
 
 [dev-dependencies]
-rand = "0.8.0"
+rand = "0.8"
