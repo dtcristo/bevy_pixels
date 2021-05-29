@@ -1,5 +1,4 @@
-use bevy::app::AppExit;
-use bevy::window::WindowResizeConstraints;
+use bevy::{app::AppExit, prelude::*, window::WindowResizeConstraints};
 use bevy_pixels::prelude::*;
 use rand::prelude::*;
 

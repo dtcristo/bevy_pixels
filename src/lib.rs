@@ -1,10 +1,16 @@
+pub mod prelude {
+    pub use crate::{PixelsOptions, PixelsPlugin, PixelsResource, PixelsStage};
+}
+
 pub use bevy;
 pub use pixels;
 
-use bevy::diagnostic::{Diagnostic, DiagnosticId, Diagnostics};
-use bevy::prelude::*;
-use bevy::window::{WindowBackendScaleFactorChanged, WindowId, WindowResized};
-use bevy::winit::WinitWindows;
+use bevy::{
+    diagnostic::{Diagnostic, DiagnosticId, Diagnostics},
+    prelude::*,
+    window::{WindowBackendScaleFactorChanged, WindowId, WindowResized},
+    winit::WinitWindows,
+};
 use pixels::{Pixels, SurfaceTexture};
 use std::time::Instant;
 
@@ -13,13 +19,6 @@ pub enum PixelsStage {
     Draw,
     Render,
     PostRender,
-}
-
-pub mod prelude {
-    pub use crate::{PixelsOptions, PixelsPlugin, PixelsResource, PixelsStage};
-    pub use bevy;
-    pub use bevy::prelude::*;
-    pub use pixels;
 }
 
 #[derive(Debug, Clone)]
