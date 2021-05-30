@@ -1,6 +1,5 @@
 <div align="center">
   <h1>
-    <img src="images/logo.png" /><br />
     bevy_pixels
   </h1>
   <p>
