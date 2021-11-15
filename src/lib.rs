@@ -2,15 +2,14 @@ pub mod prelude {
     pub use crate::{PixelsOptions, PixelsPlugin, PixelsResource, PixelsStage};
 }
 
-pub use bevy;
 pub use pixels;
 
-use bevy::{
-    diagnostic::{Diagnostic, DiagnosticId, Diagnostics},
-    prelude::*,
-    window::{WindowBackendScaleFactorChanged, WindowId, WindowResized},
-    winit::WinitWindows,
-};
+use bevy_app::prelude::*;
+use bevy_diagnostic::{Diagnostic, DiagnosticId, Diagnostics};
+use bevy_ecs::prelude::*;
+use bevy_window::prelude::*;
+use bevy_window::{WindowBackendScaleFactorChanged, WindowId, WindowResized};
+use bevy_winit::WinitWindows;
 use pixels::{Pixels, SurfaceTexture};
 use std::time::Instant;
 

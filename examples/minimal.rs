@@ -1,5 +1,8 @@
-use bevy::{app::AppExit, prelude::*, window::WindowResizeConstraints};
+use bevy_app::{prelude::*, AppExit};
+use bevy_ecs::prelude::*;
+use bevy_internal::prelude::*;
 use bevy_pixels::prelude::*;
+use bevy_window::WindowResizeConstraints;
 use rand::prelude::*;
 
 const WIDTH: u32 = 320;
