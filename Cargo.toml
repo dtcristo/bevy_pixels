@@ -18,7 +18,7 @@ bevy_diagnostic = "0.5"
 bevy_ecs = "0.5"
 bevy_window = "0.5"
 bevy_winit = "0.5"
-pixels = "0.7"
+pixels = "0.8"
 
 [dev-dependencies]
 bevy_internal = { version = "0.5", features = ["bevy_winit"] }
