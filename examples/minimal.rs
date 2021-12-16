@@ -1,5 +1,8 @@
-use bevy::{app::AppExit, prelude::*, window::WindowResizeConstraints};
+use bevy_app::{prelude::*, AppExit};
+use bevy_ecs::prelude::*;
+use bevy_internal::prelude::*;
 use bevy_pixels::prelude::*;
+use bevy_window::WindowResizeConstraints;
 use rand::prelude::*;
 
 const WIDTH: u32 = 320;
@@ -94,11 +97,11 @@ fn setup_system(mut commands: Commands) {
 fn bounce_system(mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>) {
     for (position, mut velocity, size, mut color) in query.iter_mut() {
         let mut bounce = false;
-        if position.x <= 0 || position.x + size.width > WIDTH {
+        if position.x == 0 || position.x + size.width > WIDTH {
             velocity.x *= -1;
             bounce = true;
         }
-        if position.y <= 0 || position.y + size.height > HEIGHT {
+        if position.y == 0 || position.y + size.height > HEIGHT {
             velocity.y *= -1;
             bounce = true;
         }

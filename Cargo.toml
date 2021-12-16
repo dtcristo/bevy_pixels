@@ -10,10 +10,16 @@ repository = "https://github.com/dtcristo/bevy_pixels"
 keywords = ["bevy", "pixels", "graphics", "2d", "framebuffer"]
 categories = ["game-engines", "graphics", "rendering"]
 exclude = ["images/**/*"]
+resolver = "2"
 
 [dependencies]
-bevy = { version = "0.5", default_features = false, features = ["bevy_winit"] }
-pixels = "0.3"
+bevy_app = "0.5"
+bevy_diagnostic = "0.5"
+bevy_ecs = "0.5"
+bevy_window = "0.5"
+bevy_winit = "0.5"
+pixels = "0.8"
 
 [dev-dependencies]
+bevy_internal = { version = "0.5", features = ["bevy_winit"] }
 rand = "0.8"

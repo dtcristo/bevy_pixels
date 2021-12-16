@@ -2,15 +2,14 @@ pub mod prelude {
     pub use crate::{PixelsOptions, PixelsPlugin, PixelsResource, PixelsStage};
 }
 
-pub use bevy;
 pub use pixels;
 
-use bevy::{
-    diagnostic::{Diagnostic, DiagnosticId, Diagnostics},
-    prelude::*,
-    window::{WindowBackendScaleFactorChanged, WindowId, WindowResized},
-    winit::WinitWindows,
-};
+use bevy_app::prelude::*;
+use bevy_diagnostic::{Diagnostic, DiagnosticId, Diagnostics};
+use bevy_ecs::prelude::*;
+use bevy_window::prelude::*;
+use bevy_window::{WindowBackendScaleFactorChanged, WindowId, WindowResized};
+use bevy_winit::WinitWindows;
 use pixels::{Pixels, SurfaceTexture};
 use std::time::Instant;
 
@@ -83,13 +82,13 @@ impl PixelsPlugin {
     ) {
         diagnostics.add(Diagnostic::new(Self::RENDER_TIME, "render_time", 20).with_suffix("s"));
 
-        let primary_window_id = windows
+        let window_id = windows
             .get_primary()
             .expect("primary window not found")
             .id();
 
         let winit_window = winit_windows
-            .get_window(primary_window_id)
+            .get_window(window_id)
             .expect("failed to get primary winit window");
 
         let window_size = winit_window.inner_size();
@@ -98,10 +97,7 @@ impl PixelsPlugin {
         let pixels = Pixels::new(options.width, options.height, surface_texture)
             .expect("failed to create pixels");
 
-        commands.insert_resource(PixelsResource {
-            pixels: pixels,
-            window_id: primary_window_id,
-        });
+        commands.insert_resource(PixelsResource { pixels, window_id });
     }
 
     pub fn window_resize_system(
@@ -135,10 +131,7 @@ impl PixelsPlugin {
         }
     }
 
-    pub fn render_system(
-        mut resource: ResMut<PixelsResource>,
-        mut diagnostics: ResMut<Diagnostics>,
-    ) {
+    pub fn render_system(resource: Res<PixelsResource>, mut diagnostics: ResMut<Diagnostics>) {
         let start = Instant::now();
 
         resource.pixels.render().expect("failed to render pixels");
