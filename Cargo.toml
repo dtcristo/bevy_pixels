@@ -23,3 +23,8 @@ pixels = "0.8"
 [dev-dependencies]
 bevy_internal = { version = "0.5", features = ["bevy_winit"] }
 rand = "0.8"
+
+[features]
+default = ["x11"]
+x11 = ["bevy_winit/x11"]
+wayland = ["bevy_winit/wayland"]
