@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Updated to Rust 2021 Edition.
+
 ## [0.2.0] - 2021-12-16
 
 ### Changed
