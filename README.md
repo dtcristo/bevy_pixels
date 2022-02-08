@@ -29,8 +29,8 @@ Add `bevy` and `bevy_pixels` to `Cargo.toml`. Be sure to disable `bevy`'s `rende
 
 ```toml
 [dependencies]
-bevy = { version = "0.5", default_features = false }
-bevy_pixels = "0.1"
+bevy = { version = "0.6", default_features = false }
+bevy_pixels = "0.3"
 ```
 
 Add `PixelsPlugin` to your Bevy project.
@@ -40,10 +40,10 @@ use bevy::prelude::*;
 use bevy_pixels::prelude::*;
 
 fn main() {
-    App::build()
+    App::new()
         .add_plugins(DefaultPlugins)
         .add_plugin(PixelsPlugin)
-        .add_system(main_system.system())
+        .add_system(main_system)
         .run();
 }
 ```

@@ -6,6 +6,8 @@
 
 ## [0.3.0] - 2022-02-08
 
+### Changed
+
 - Updated to Rust 2021 Edition.
 - Updated `bevy` to 0.6.
 - Updated `pixels` to 0.9.
