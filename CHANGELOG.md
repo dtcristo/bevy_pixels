@@ -5,6 +5,7 @@
 ### Changed
 
 - Updated to Rust 2021 Edition.
+- Updated `bevy` to 0.6.
 
 ## [0.2.0] - 2021-12-16
 

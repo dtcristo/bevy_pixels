@@ -1,8 +1,10 @@
-use bevy_app::{prelude::*, AppExit};
-use bevy_ecs::prelude::*;
-use bevy_internal::prelude::*;
+use bevy::{
+    app::AppExit,
+    diagnostic::{EntityCountDiagnosticsPlugin, FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
+    prelude::*,
+    window::WindowResizeConstraints,
+};
 use bevy_pixels::prelude::*;
-use bevy_window::WindowResizeConstraints;
 use rand::prelude::*;
 
 const WIDTH: u32 = 320;
@@ -16,25 +18,25 @@ struct ObjectBundle {
     color: Color,
 }
 
-#[derive(Debug)]
+#[derive(Component, Debug)]
 struct Position {
     x: u32,
     y: u32,
 }
 
-#[derive(Debug)]
+#[derive(Component, Debug)]
 struct Velocity {
     x: i16,
     y: i16,
 }
 
-#[derive(Debug)]
+#[derive(Component, Debug)]
 struct Size {
     width: u32,
     height: u32,
 }
 
-#[derive(Debug)]
+#[derive(Component, Debug)]
 struct Color(u8, u8, u8, u8);
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, StageLabel)]
@@ -44,7 +46,7 @@ enum AppStage {
 }
 
 fn main() {
-    App::build()
+    App::new()
         .insert_resource(WindowDescriptor {
             title: "Hello Bevy Pixels".to_string(),
             width: WIDTH as f32,
@@ -62,10 +64,13 @@ fn main() {
         })
         .add_plugins(DefaultPlugins)
         .add_plugin(PixelsPlugin)
-        .add_startup_system(setup_system.system())
-        .add_system(bounce_system.system())
-        .add_system(movement_system.system())
-        .add_system(exit_on_escape_system.system())
+        .add_plugin(FrameTimeDiagnosticsPlugin::default())
+        .add_plugin(EntityCountDiagnosticsPlugin::default())
+        .add_plugin(LogDiagnosticsPlugin::default())
+        .add_startup_system(setup_system)
+        .add_system(bounce_system)
+        .add_system(movement_system)
+        .add_system(exit_on_escape_system)
         .add_stage_after(
             PixelsStage::Draw,
             AppStage::DrawBackground,
@@ -76,8 +81,8 @@ fn main() {
             AppStage::DrawObjects,
             SystemStage::parallel(),
         )
-        .add_system_to_stage(AppStage::DrawBackground, draw_background_system.system())
-        .add_system_to_stage(AppStage::DrawObjects, draw_objects_system.system())
+        .add_system_to_stage(AppStage::DrawBackground, draw_background_system)
+        .add_system_to_stage(AppStage::DrawObjects, draw_objects_system)
         .run();
 }
 
