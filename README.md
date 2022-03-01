@@ -29,7 +29,7 @@ Add `bevy` and `bevy_pixels` to `Cargo.toml`. Be sure to disable `bevy`'s `rende
 
 ```toml
 [dependencies]
-bevy = { version = "0.6.1", default_features = false }
+bevy = { version = "0.6", default_features = false }
 bevy_pixels = "0.4"
 ```
 
@@ -62,12 +62,11 @@ fn main_system(mut pixels_resource: ResMut<PixelsResource>) {
 
 ## Bevy and Pixels version mapping
 
-| bevy_pixels | bevy  | pixels |
-| ----------- | ----- | ------ |
-| 0.1         | 0.5   | 0.3    |
-| 0.2         | 0.5   | 0.8    |
-| 0.3         | 0.6   | 0.9    |
-| 0.4         | 0.6.1 | 0.9    |
+| bevy_pixels | bevy | pixels |
+| ----------- | ---- | ------ |
+| 0.1         | 0.5  | 0.3    |
+| 0.2         | 0.5  | 0.8    |
+| 0.3 - 0.4   | 0.6  | 0.9    |
 
 ## Examples
 
