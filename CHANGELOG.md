@@ -2,7 +2,15 @@
 
 ## [Unreleased]
 
+## [0.4.0] - 2022-03-01
+
+### Added
+
+- Added display server protocol features.
+
 ### Changed
+
+- Updated `bevy` to 0.6.1.
 
 ## [0.3.0] - 2022-02-08
 
