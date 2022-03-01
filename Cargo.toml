@@ -19,7 +19,7 @@ wayland = ["bevy/wayland"]
 x11 = ["bevy/x11"]
 
 [dependencies]
-bevy = { version = "0.6", default_features = false, features = ["bevy_winit"] }
+bevy = { version = "0.6.1", default_features = false, features = ["bevy_winit"] }
 pixels = "0.9"
 
 [dev-dependencies]
