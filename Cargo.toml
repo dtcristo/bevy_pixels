@@ -11,6 +11,13 @@ keywords = ["bevy", "pixels", "graphics", "2d", "framebuffer"]
 categories = ["game-engines", "graphics", "rendering"]
 exclude = ["images/**/*"]
 
+[features]
+default = ["x11"]
+
+# Display server protocol support (X11 is enabled by default)
+wayland = ["bevy/wayland"]
+x11 = ["bevy/x11"]
+
 [dependencies]
 bevy = { version = "0.6", default_features = false, features = ["bevy_winit"] }
 pixels = "0.9"
