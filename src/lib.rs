@@ -78,7 +78,7 @@ impl PixelsPlugin {
         mut diagnostics: ResMut<Diagnostics>,
         options: Res<PixelsOptions>,
         windows: Res<Windows>,
-        winit_windows: Res<WinitWindows>,
+        winit_windows: NonSend<WinitWindows>,
     ) {
         diagnostics.add(Diagnostic::new(Self::RENDER_TIME, "render_time", 20).with_suffix("s"));
 

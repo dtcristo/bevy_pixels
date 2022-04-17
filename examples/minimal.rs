@@ -54,9 +54,9 @@ fn main() {
             resize_constraints: WindowResizeConstraints {
                 min_width: WIDTH as f32,
                 min_height: HEIGHT as f32,
-                ..Default::default()
+                ..default()
             },
-            ..Default::default()
+            ..default()
         })
         .insert_resource(PixelsOptions {
             width: WIDTH,
