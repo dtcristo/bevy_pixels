@@ -39,12 +39,6 @@ struct Size {
 #[derive(Component, Debug)]
 struct Color(u8, u8, u8, u8);
 
-#[derive(Debug, Hash, PartialEq, Eq, Clone, StageLabel)]
-enum AppStage {
-    DrawBackground,
-    DrawObjects,
-}
-
 fn main() {
     App::new()
         .insert_resource(WindowDescriptor {
@@ -69,20 +63,13 @@ fn main() {
         .add_plugin(LogDiagnosticsPlugin::default())
         .add_startup_system(setup_system)
         .add_system(bounce_system)
-        .add_system(movement_system)
+        .add_system(movement_system.after(bounce_system))
         .add_system(exit_on_escape_system)
-        .add_stage_after(
+        .add_system_to_stage(PixelsStage::Draw, draw_background_system)
+        .add_system_to_stage(
             PixelsStage::Draw,
-            AppStage::DrawBackground,
-            SystemStage::parallel(),
+            draw_objects_system.after(draw_background_system),
         )
-        .add_stage_after(
-            AppStage::DrawBackground,
-            AppStage::DrawObjects,
-            SystemStage::parallel(),
-        )
-        .add_system_to_stage(AppStage::DrawBackground, draw_background_system)
-        .add_system_to_stage(AppStage::DrawObjects, draw_objects_system)
         .run();
 }
 
