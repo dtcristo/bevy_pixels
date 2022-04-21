@@ -1,6 +1,6 @@
 use bevy::{
     app::AppExit,
-    diagnostic::{EntityCountDiagnosticsPlugin, FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
+    diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
     prelude::*,
     window::WindowResizeConstraints,
 };
@@ -59,7 +59,6 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(PixelsPlugin)
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
-        .add_plugin(EntityCountDiagnosticsPlugin::default())
         .add_plugin(LogDiagnosticsPlugin::default())
         .add_startup_system(setup_system)
         .add_system(bounce_system)
