@@ -60,19 +60,16 @@ fn main() {
         .add_plugin(PixelsPlugin)
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_plugin(LogDiagnosticsPlugin::default())
-        .add_startup_system(setup_system)
-        .add_system(bounce_system)
-        .add_system(movement_system.after(bounce_system))
-        .add_system(exit_on_escape_system)
-        .add_system_to_stage(PixelsStage::Draw, draw_background_system)
-        .add_system_to_stage(
-            PixelsStage::Draw,
-            draw_objects_system.after(draw_background_system),
-        )
+        .add_startup_system(setup)
+        .add_system(bounce)
+        .add_system(movement.after(bounce))
+        .add_system(exit_on_escape)
+        .add_system_to_stage(PixelsStage::Draw, draw_background)
+        .add_system_to_stage(PixelsStage::Draw, draw_objects.after(draw_background))
         .run();
 }
 
-fn setup_system(mut commands: Commands) {
+fn setup(mut commands: Commands) {
     let box_object = ObjectBundle {
         position: Position { x: 24, y: 16 },
         velocity: Velocity { x: 1, y: 1 },
@@ -85,7 +82,7 @@ fn setup_system(mut commands: Commands) {
     commands.spawn().insert_bundle(box_object);
 }
 
-fn bounce_system(mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>) {
+fn bounce(mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>) {
     for (position, mut velocity, size, mut color) in query.iter_mut() {
         let mut bounce = false;
         if position.x == 0 || position.x + size.width > WIDTH {
@@ -104,28 +101,25 @@ fn bounce_system(mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>
     }
 }
 
-fn movement_system(mut query: Query<(&mut Position, &Velocity)>) {
+fn movement(mut query: Query<(&mut Position, &Velocity)>) {
     for (mut position, velocity) in query.iter_mut() {
         position.x = (position.x as i16 + velocity.x) as u32;
         position.y = (position.y as i16 + velocity.y) as u32;
     }
 }
 
-fn exit_on_escape_system(
-    keyboard_input: Res<Input<KeyCode>>,
-    mut app_exit_events: EventWriter<AppExit>,
-) {
+fn exit_on_escape(keyboard_input: Res<Input<KeyCode>>, mut app_exit_events: EventWriter<AppExit>) {
     if keyboard_input.just_pressed(KeyCode::Escape) {
         app_exit_events.send(AppExit);
     }
 }
 
-fn draw_background_system(mut pixels_resource: ResMut<PixelsResource>) {
+fn draw_background(mut pixels_resource: ResMut<PixelsResource>) {
     let frame = pixels_resource.pixels.get_frame();
     frame.copy_from_slice(&[0x48, 0xb2, 0xe8, 0xff].repeat(frame.len() / 4));
 }
 
-fn draw_objects_system(
+fn draw_objects(
     mut pixels_resource: ResMut<PixelsResource>,
     query: Query<(&Position, &Size, &Color)>,
 ) {

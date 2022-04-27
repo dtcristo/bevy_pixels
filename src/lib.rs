@@ -62,10 +62,10 @@ impl Plugin for PixelsPlugin {
             SystemStage::parallel(),
         )
         .init_resource::<PixelsOptions>()
-        .add_startup_system(Self::setup_system)
-        .add_system(Self::window_resize_system)
-        .add_system(Self::window_change_system)
-        .add_system_to_stage(PixelsStage::Render, Self::render_system);
+        .add_startup_system(Self::setup)
+        .add_system(Self::window_resize)
+        .add_system(Self::window_change)
+        .add_system_to_stage(PixelsStage::Render, Self::render);
     }
 }
 
@@ -73,7 +73,7 @@ impl PixelsPlugin {
     pub const RENDER_TIME: DiagnosticId =
         DiagnosticId::from_u128(1187582084072339577959028643519383692);
 
-    pub fn setup_system(
+    pub fn setup(
         mut commands: Commands,
         mut diagnostics: ResMut<Diagnostics>,
         options: Res<PixelsOptions>,
@@ -100,7 +100,7 @@ impl PixelsPlugin {
         commands.insert_resource(PixelsResource { pixels, window_id });
     }
 
-    pub fn window_resize_system(
+    pub fn window_resize(
         mut window_resized_events: EventReader<WindowResized>,
         mut resource: ResMut<PixelsResource>,
     ) {
@@ -113,7 +113,7 @@ impl PixelsPlugin {
         }
     }
 
-    pub fn window_change_system(
+    pub fn window_change(
         windows: Res<Windows>,
         mut window_backend_scale_factor_changed_events: EventReader<
             WindowBackendScaleFactorChanged,
@@ -131,7 +131,7 @@ impl PixelsPlugin {
         }
     }
 
-    pub fn render_system(resource: Res<PixelsResource>, mut diagnostics: ResMut<Diagnostics>) {
+    pub fn render(resource: Res<PixelsResource>, mut diagnostics: ResMut<Diagnostics>) {
         let start = Instant::now();
 
         resource.pixels.render().expect("failed to render pixels");
