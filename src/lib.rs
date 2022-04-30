@@ -62,7 +62,7 @@ impl Plugin for PixelsPlugin {
             SystemStage::parallel(),
         )
         .init_resource::<PixelsOptions>()
-        .add_startup_system(Self::setup)
+        .add_startup_system_to_stage(StartupStage::PreStartup, Self::setup)
         .add_system(Self::window_resize)
         .add_system(Self::window_change)
         .add_system_to_stage(PixelsStage::Render, Self::render);

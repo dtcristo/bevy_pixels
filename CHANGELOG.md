@@ -6,6 +6,7 @@
 
 - Updated `bevy` to 0.7.
 - Simplify minimal example.
+- Initialize `PixelsResource` in `StartupStage::PreStartup` instead of `StartupStage::Startup`
 
 ## [0.4.0] - 2022-03-01
 
