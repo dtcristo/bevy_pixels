@@ -103,32 +103,35 @@ impl PixelsPlugin {
     pub fn window_resize(
         mut window_resized_events: EventReader<WindowResized>,
         mut resource: ResMut<PixelsResource>,
+        windows: Res<Windows>,
     ) {
         for event in window_resized_events.iter() {
             if event.id == resource.window_id {
-                resource
-                    .pixels
-                    .resize_surface(event.width as u32, event.height as u32);
+                Self::resize_surface_to_window(&mut resource, &windows);
             }
         }
     }
 
     pub fn window_change(
-        windows: Res<Windows>,
         mut window_backend_scale_factor_changed_events: EventReader<
             WindowBackendScaleFactorChanged,
         >,
         mut resource: ResMut<PixelsResource>,
+        windows: Res<Windows>,
     ) {
         for event in window_backend_scale_factor_changed_events.iter() {
             if event.id == resource.window_id {
-                let window = windows.get(resource.window_id).unwrap();
-
-                resource
-                    .pixels
-                    .resize_surface(window.physical_width(), window.physical_height());
+                Self::resize_surface_to_window(&mut resource, &windows);
             }
         }
+    }
+
+    fn resize_surface_to_window(resource: &mut ResMut<PixelsResource>, windows: &Res<Windows>) {
+        let window = windows.get(resource.window_id).unwrap();
+
+        resource
+            .pixels
+            .resize_surface(window.physical_width(), window.physical_height());
     }
 
     pub fn render(resource: Res<PixelsResource>, mut diagnostics: ResMut<Diagnostics>) {
