@@ -2,11 +2,18 @@
 
 ## [Unreleased]
 
+## [0.5.0] - 2022-06-28
+
 ### Changed
 
 - Updated `bevy` to 0.7.
 - Simplify minimal example.
 - Initialize `PixelsResource` in `StartupStage::PreStartup` instead of `StartupStage::Startup`
+- Relicense under dual MIT or Apache-2.0 license.
+
+### Fixed
+
+- Fixed window resize on high DPI displays.
 
 ## [0.4.0] - 2022-03-01
 
@@ -42,7 +49,8 @@
 
 Initial release.
 
-[unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.4.0...HEAD
+[unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.5.0
 [0.4.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.4.0
 [0.3.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.3.0
 [0.2.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.2.0
