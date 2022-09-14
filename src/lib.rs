@@ -11,6 +11,9 @@ use bevy::{
     winit::WinitWindows,
 };
 use pixels::{Pixels, SurfaceTexture};
+#[cfg(target_arch = "wasm32")]
+use pollster::FutureExt as _;
+#[cfg(not(target_arch = "wasm32"))]
 use std::time::Instant;
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, StageLabel)]
@@ -94,8 +97,18 @@ impl PixelsPlugin {
         let window_size = winit_window.inner_size();
         let surface_texture =
             SurfaceTexture::new(window_size.width, window_size.height, winit_window);
-        let pixels = Pixels::new(options.width, options.height, surface_texture)
-            .expect("failed to create pixels");
+
+        let pixels = {
+            #[cfg(not(target_arch = "wasm32"))]
+            {
+                Pixels::new(options.width, options.height, surface_texture)
+            }
+            #[cfg(target_arch = "wasm32")]
+            {
+                Pixels::new_async(options.width, options.height, surface_texture).block_on()
+            }
+        }
+        .expect("failed to create pixels");
 
         commands.insert_resource(PixelsResource { pixels, window_id });
     }
@@ -135,12 +148,19 @@ impl PixelsPlugin {
     }
 
     pub fn render(resource: Res<PixelsResource>, mut diagnostics: ResMut<Diagnostics>) {
-        let start = Instant::now();
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            let start = Instant::now();
 
-        resource.pixels.render().expect("failed to render pixels");
+            resource.pixels.render().expect("failed to render pixels");
 
-        let end = Instant::now();
-        let render_time = end.duration_since(start);
-        diagnostics.add_measurement(Self::RENDER_TIME, || render_time.as_secs_f64());
+            let end = Instant::now();
+            let render_time = end.duration_since(start);
+            diagnostics.add_measurement(Self::RENDER_TIME, || render_time.as_secs_f64());
+        }
+        #[cfg(target_arch = "wasm32")]
+        {
+            resource.pixels.render().expect("failed to render pixels");
+        }
     }
 }

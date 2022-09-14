@@ -1,2 +1,3 @@
+/examples/wasm/target
 /target
 Cargo.lock

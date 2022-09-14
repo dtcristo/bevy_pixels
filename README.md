@@ -71,15 +71,34 @@ fn main_system(mut pixels_resource: ResMut<PixelsResource>) {
 
 ## Examples
 
-### [Hello Bevy Pixels](https://github.com/dtcristo/bevy_pixels/blob/main/examples/minimal.rs)
+### [minimal](https://github.com/dtcristo/bevy_pixels/blob/main/examples/minimal.rs)
 
 This example is based off [`minimal-winit`](https://github.com/parasyte/pixels/tree/master/examples/minimal-winit) example from the pixels project.
 
+![minimal example](images/minimal.png)
+
+### Running examples natively
+
 ```sh
-cargo run --release --example minimal
+cargo run --release --example example_name
 ```
 
-![minimal example](images/minimal.png)
+### Running examples in browser
+
+Install dependencies.
+
+```sh
+rustup target add wasm32-unknown-unknown
+cargo install wasm-bindgen-cli just miniserve
+```
+
+Build and serve example with [just](https://github.com/casey/just). See [`Justfile`](Justfile) for more details.
+
+```sh
+just serve example_name
+```
+
+Open http://localhost:8080/ in your browser to run the example.
 
 ## License
 
