@@ -115,7 +115,7 @@ fn exit_on_escape(keyboard_input: Res<Input<KeyCode>>, mut app_exit_events: Even
 }
 
 fn draw_background(mut pixels_resource: ResMut<PixelsResource>) {
-    let frame = pixels_resource.pixels.get_frame();
+    let frame = pixels_resource.pixels.get_frame_mut();
     frame.copy_from_slice(&[0x48, 0xb2, 0xe8, 0xff].repeat(frame.len() / 4));
 }
 
@@ -123,7 +123,7 @@ fn draw_objects(
     mut pixels_resource: ResMut<PixelsResource>,
     query: Query<(&Position, &Size, &Color)>,
 ) {
-    let frame = pixels_resource.pixels.get_frame();
+    let frame = pixels_resource.pixels.get_frame_mut();
     let frame_width_bytes = (WIDTH * 4) as usize;
 
     for (position, size, color) in query.iter() {

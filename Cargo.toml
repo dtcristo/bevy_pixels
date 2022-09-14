@@ -19,8 +19,8 @@ wayland = ["bevy/wayland"]
 x11 = ["bevy/x11"]
 
 [dependencies]
-bevy = { version = "0.7", default_features = false, features = ["bevy_winit"] }
-pixels = "0.9"
+bevy = { version = "0.8", default_features = false, features = ["bevy_winit"] }
+pixels = { git = "https://github.com/parasyte/pixels", rev = "9c3edeb1d4efc8a06b4c5536577cc0909c62714b" }
 
 [dev-dependencies]
 rand = "0.8"

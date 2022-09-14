@@ -29,7 +29,7 @@ Add `bevy` and `bevy_pixels` to `Cargo.toml`. Be sure to disable `bevy`'s `rende
 
 ```toml
 [dependencies]
-bevy = { version = "0.7", default_features = false }
+bevy = { version = "0.8", default_features = false }
 bevy_pixels = "0.5"
 ```
 
@@ -53,7 +53,7 @@ Use `PixelsResource` in your systems.
 ```rust
 fn main_system(mut pixels_resource: ResMut<PixelsResource>) {
     // Get a mutable slice for the pixel buffer
-    let frame: &mut [u8] = pixels_resource.pixels.get_frame();
+    let frame: &mut [u8] = pixels_resource.pixels.get_frame_mut();
 
     // Fill frame with pixel data
     // ...

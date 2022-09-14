@@ -141,6 +141,6 @@ impl PixelsPlugin {
 
         let end = Instant::now();
         let render_time = end.duration_since(start);
-        diagnostics.add_measurement(Self::RENDER_TIME, render_time.as_secs_f64());
+        diagnostics.add_measurement(Self::RENDER_TIME, || render_time.as_secs_f64());
     }
 }
