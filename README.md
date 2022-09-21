@@ -29,7 +29,7 @@ Add `bevy` and `bevy_pixels` to `Cargo.toml`. Be sure to disable `bevy`'s `rende
 
 ```toml
 [dependencies]
-bevy = { version = "0.8", default_features = false }
+bevy = { version = "0.7", default_features = false }
 bevy_pixels = "0.5"
 ```
 
