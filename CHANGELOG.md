@@ -2,13 +2,22 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added support for WASM builds.
+
+### Changed
+
+- Updated `bevy` to 0.8.
+- Updated `pixels` to unreleased version for `bevy` 0.8 compatibility.
+
 ## [0.5.0] - 2022-06-28
 
 ### Changed
 
 - Updated `bevy` to 0.7.
 - Simplify minimal example.
-- Initialize `PixelsResource` in `StartupStage::PreStartup` instead of `StartupStage::Startup`
+- Initialize `PixelsResource` in `StartupStage::PreStartup` instead of `StartupStage::Startup`.
 - Relicense under dual MIT or Apache-2.0 license.
 
 ### Fixed
