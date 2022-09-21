@@ -50,6 +50,7 @@ fn main() {
                 min_height: HEIGHT as f32,
                 ..default()
             },
+            fit_canvas_to_parent: true,
             ..default()
         })
         .insert_resource(PixelsOptions {
