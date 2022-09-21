@@ -1,3 +1,9 @@
+run example_name:
+    cargo run --release --example {{example_name}}
+
+build example_name:
+    cargo build --release --example {{example_name}}
+
 serve example_name: (build_web example_name)
     miniserve --index index.html examples/wasm
 
