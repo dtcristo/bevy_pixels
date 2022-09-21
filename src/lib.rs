@@ -105,6 +105,7 @@ impl PixelsPlugin {
             }
             #[cfg(target_arch = "wasm32")]
             {
+                // TODO: Find a way to asynchronously load pixels on web
                 Pixels::new_async(options.width, options.height, surface_texture).block_on()
             }
         }
@@ -147,20 +148,19 @@ impl PixelsPlugin {
             .resize_surface(window.physical_width(), window.physical_height());
     }
 
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn render(resource: Res<PixelsResource>, mut diagnostics: ResMut<Diagnostics>) {
-        #[cfg(not(target_arch = "wasm32"))]
-        {
-            let start = Instant::now();
+        let start = Instant::now();
 
-            resource.pixels.render().expect("failed to render pixels");
+        resource.pixels.render().expect("failed to render pixels");
 
-            let end = Instant::now();
-            let render_time = end.duration_since(start);
-            diagnostics.add_measurement(Self::RENDER_TIME, || render_time.as_secs_f64());
-        }
-        #[cfg(target_arch = "wasm32")]
-        {
-            resource.pixels.render().expect("failed to render pixels");
-        }
+        let end = Instant::now();
+        let render_time = end.duration_since(start);
+        diagnostics.add_measurement(Self::RENDER_TIME, || render_time.as_secs_f64());
+    }
+
+    #[cfg(target_arch = "wasm32")]
+    pub fn render(resource: Res<PixelsResource>) {
+        resource.pixels.render().expect("failed to render pixels");
     }
 }
