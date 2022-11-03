@@ -9,7 +9,7 @@
 ### Changed
 
 - Updated `bevy` to 0.8.
-- Updated `pixels` to unreleased version for `bevy` 0.8 compatibility.
+- Updated `pixels` to 0.10.
 
 ## [0.5.0] - 2022-06-28
 
