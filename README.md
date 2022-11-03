@@ -30,7 +30,7 @@ Add `bevy` and `bevy_pixels` to `Cargo.toml`. Be sure to disable `bevy`'s `rende
 ```toml
 [dependencies]
 bevy = { version = "0.8", default_features = false }
-bevy_pixels = { git = "https://github.com/dtcristo/bevy_pixels" }
+bevy_pixels = "0.6"
 ```
 
 Add `PixelsPlugin` to your Bevy project.
@@ -68,6 +68,7 @@ fn main_system(mut pixels_resource: ResMut<PixelsResource>) {
 | 0.2         | 0.5  | 0.8    |
 | 0.3-0.4     | 0.6  | 0.9    |
 | 0.5         | 0.7  | 0.9    |
+| 0.6         | 0.8  | 0.10   |
 
 ## Examples
 
