@@ -20,7 +20,7 @@ x11 = ["bevy/x11"]
 
 [dependencies]
 bevy = { version = "0.8", default_features = false, features = ["bevy_winit"] }
-pixels = { git = "https://github.com/parasyte/pixels", rev = "9c3edeb1d4efc8a06b4c5536577cc0909c62714b" }
+pixels = "0.10"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 pollster = "0.2"
