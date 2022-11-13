@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Updated `bevy` to 0.9.
+
 ## [0.6.0] - 2022-11-03
 
 ### Added

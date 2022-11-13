@@ -23,7 +23,7 @@ pub enum PixelsStage {
     PostRender,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Resource, Debug, Clone)]
 pub struct PixelsOptions {
     /// Width of the pixel buffer
     pub width: u32,
@@ -40,6 +40,7 @@ impl Default for PixelsOptions {
     }
 }
 
+#[derive(Resource)]
 pub struct PixelsResource {
     pub pixels: Pixels,
     pub window_id: WindowId,

@@ -41,23 +41,25 @@ struct Color(u8, u8, u8, u8);
 
 fn main() {
     App::new()
-        .insert_resource(WindowDescriptor {
-            title: "Hello Bevy Pixels".to_string(),
-            width: WIDTH as f32,
-            height: HEIGHT as f32,
-            resize_constraints: WindowResizeConstraints {
-                min_width: WIDTH as f32,
-                min_height: HEIGHT as f32,
-                ..default()
-            },
-            fit_canvas_to_parent: true,
-            ..default()
-        })
         .insert_resource(PixelsOptions {
             width: WIDTH,
             height: HEIGHT,
         })
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            window: WindowDescriptor {
+                title: "Hello Bevy Pixels".to_string(),
+                width: WIDTH as f32,
+                height: HEIGHT as f32,
+                resize_constraints: WindowResizeConstraints {
+                    min_width: WIDTH as f32,
+                    min_height: HEIGHT as f32,
+                    ..default()
+                },
+                fit_canvas_to_parent: true,
+                ..default()
+            },
+            ..default()
+        }))
         .add_plugin(PixelsPlugin)
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_plugin(LogDiagnosticsPlugin::default())
@@ -80,7 +82,7 @@ fn setup(mut commands: Commands) {
         },
         color: Color(0x5e, 0x48, 0xe8, 0xff),
     };
-    commands.spawn().insert_bundle(box_object);
+    commands.spawn(box_object);
 }
 
 fn bounce(mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>) {
