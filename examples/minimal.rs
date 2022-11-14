@@ -41,10 +41,6 @@ struct Color(u8, u8, u8, u8);
 
 fn main() {
     App::new()
-        .insert_resource(PixelsOptions {
-            width: WIDTH,
-            height: HEIGHT,
-        })
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             window: WindowDescriptor {
                 title: "Hello Bevy Pixels".to_string(),
@@ -60,7 +56,11 @@ fn main() {
             },
             ..default()
         }))
-        .add_plugin(PixelsPlugin)
+        .add_plugin(PixelsPlugin {
+            width: WIDTH,
+            height: HEIGHT,
+            ..default()
+        })
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_plugin(LogDiagnosticsPlugin::default())
         .add_startup_system(setup)

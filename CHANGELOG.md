@@ -5,6 +5,8 @@
 ### Changed
 
 - Updated `bevy` to 0.9.
+- Updated `PixelsPlugin` to take configuration in Bevy 0.9 style. `PixelsOptions` resource is only
+  for internal use now.
 
 ## [0.6.0] - 2022-11-03
 

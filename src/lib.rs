@@ -1,5 +1,5 @@
 pub mod prelude {
-    pub use crate::{PixelsOptions, PixelsPlugin, PixelsResource, PixelsStage};
+    pub use crate::{PixelsPlugin, PixelsResource, PixelsStage};
 }
 
 pub use pixels;
@@ -23,34 +23,44 @@ pub enum PixelsStage {
     PostRender,
 }
 
-#[derive(Resource, Debug, Clone)]
-pub struct PixelsOptions {
-    /// Width of the pixel buffer
-    pub width: u32,
-    /// Height of the pixel buffer
-    pub height: u32,
-}
-
-impl Default for PixelsOptions {
-    fn default() -> Self {
-        PixelsOptions {
-            width: 180,
-            height: 120,
-        }
-    }
-}
-
 #[derive(Resource)]
 pub struct PixelsResource {
     pub pixels: Pixels,
     pub window_id: WindowId,
 }
 
-pub struct PixelsPlugin;
+// Internal configuration resource for use in `setup` system. Users should set values on
+// `PixelsPlugin` instead of inserting this resource directly. Ideally we just read the plugin
+// configuration directly within `setup` system, but this is not currently possible.
+#[derive(Resource)]
+pub struct PixelsOptions {
+    width: u32,
+    height: u32,
+}
+
+pub struct PixelsPlugin {
+    /// Width of the pixel buffer
+    pub width: u32,
+    /// Height of the pixel buffer
+    pub height: u32,
+}
+
+impl Default for PixelsPlugin {
+    fn default() -> Self {
+        PixelsPlugin {
+            width: 180,
+            height: 120,
+        }
+    }
+}
 
 impl Plugin for PixelsPlugin {
     fn build(&self, app: &mut App) {
-        app.add_stage_after(
+        app.insert_resource(PixelsOptions {
+            width: self.width,
+            height: self.height,
+        })
+        .add_stage_after(
             CoreStage::PostUpdate,
             PixelsStage::Draw,
             SystemStage::parallel(),
@@ -65,7 +75,6 @@ impl Plugin for PixelsPlugin {
             PixelsStage::PostRender,
             SystemStage::parallel(),
         )
-        .init_resource::<PixelsOptions>()
         .add_startup_system_to_stage(StartupStage::PreStartup, Self::setup)
         .add_system(Self::window_resize)
         .add_system(Self::window_change)
