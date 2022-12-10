@@ -1,13 +1,13 @@
-run example_name:
-    cargo run --release --example {{example_name}}
+run EXAMPLE_NAME:
+    cargo run --release --example {{EXAMPLE_NAME}}
 
-build example_name:
-    cargo build --release --example {{example_name}}
+build EXAMPLE_NAME:
+    cargo build --release --example {{EXAMPLE_NAME}}
 
-serve example_name: (build_web example_name)
+serve EXAMPLE_NAME: (build-web EXAMPLE_NAME)
     miniserve --index index.html examples/wasm
 
-build_web example_name:
-    cargo build --release --example {{example_name}} --target wasm32-unknown-unknown
-    wasm-bindgen --target web --out-dir examples/wasm/target --out-name wasm_example \
-        target/wasm32-unknown-unknown/release/examples/{{example_name}}.wasm
+build-web EXAMPLE_NAME:
+    cargo build --release --example {{EXAMPLE_NAME}} --target wasm32-unknown-unknown
+    wasm-bindgen --target web --no-typescript --out-dir examples/wasm/target --out-name wasm_example \
+        target/wasm32-unknown-unknown/release/examples/{{EXAMPLE_NAME}}.wasm
