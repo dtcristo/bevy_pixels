@@ -85,7 +85,7 @@ This example is based off [`minimal-winit`](https://github.com/parasyte/pixels/t
 cargo run --release --example example_name
 ```
 
-### Running examples in browser
+### Running examples in web browser
 
 Install dependencies.
 
@@ -97,10 +97,10 @@ cargo install wasm-bindgen-cli just miniserve
 Build and serve example with [just](https://github.com/casey/just). See [`Justfile`](Justfile) for more details.
 
 ```sh
-just serve example_name
+just serve-web example_name
 ```
 
-Open http://localhost:8080/ in your browser to run the example.
+Open http://localhost:8080/ in your web browser to run the example.
 
 ## License
 

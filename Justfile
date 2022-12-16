@@ -4,7 +4,7 @@ run EXAMPLE_NAME:
 build EXAMPLE_NAME:
     cargo build --release --example {{EXAMPLE_NAME}}
 
-serve EXAMPLE_NAME: (build-web EXAMPLE_NAME)
+serve-web EXAMPLE_NAME: (build-web EXAMPLE_NAME)
     miniserve --index index.html examples/wasm
 
 build-web EXAMPLE_NAME:
