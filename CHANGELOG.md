@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Updated `pixels` to 0.11.
+
 ## [0.7.0] - 2022-11-14
 
 ### Changed

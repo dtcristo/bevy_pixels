@@ -153,7 +153,7 @@ impl PixelsPlugin {
     fn resize_surface_to_window(resource: &mut ResMut<PixelsResource>, windows: &Res<Windows>) {
         let window = windows.get(resource.window_id).unwrap();
 
-        resource
+        let _ = resource
             .pixels
             .resize_surface(window.physical_width(), window.physical_height());
     }
