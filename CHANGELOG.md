@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Updated `bevy` to 0.10.
 - Updated `pixels` to 0.12.
 
 ## [0.8.0] - 2022-12-20

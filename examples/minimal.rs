@@ -2,7 +2,7 @@ use bevy::{
     app::AppExit,
     diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
     prelude::*,
-    window::WindowResizeConstraints,
+    window::{WindowResizeConstraints, WindowResolution},
 };
 use bevy_pixels::prelude::*;
 use rand::prelude::*;
@@ -42,10 +42,9 @@ struct Color(u8, u8, u8, u8);
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
-            window: WindowDescriptor {
+            primary_window: Some(Window {
                 title: "Hello Bevy Pixels".to_string(),
-                width: WIDTH as f32,
-                height: HEIGHT as f32,
+                resolution: WindowResolution::new(WIDTH as f32, HEIGHT as f32),
                 resize_constraints: WindowResizeConstraints {
                     min_width: WIDTH as f32,
                     min_height: HEIGHT as f32,
@@ -53,7 +52,7 @@ fn main() {
                 },
                 fit_canvas_to_parent: true,
                 ..default()
-            },
+            }),
             ..default()
         }))
         .add_plugin(PixelsPlugin {
@@ -67,8 +66,8 @@ fn main() {
         .add_system(bounce)
         .add_system(movement.after(bounce))
         .add_system(exit_on_escape)
-        .add_system_to_stage(PixelsStage::Draw, draw_background)
-        .add_system_to_stage(PixelsStage::Draw, draw_objects.after(draw_background))
+        .add_system(draw_background.in_set(PixelsSet::Draw))
+        .add_system(draw_objects.in_set(PixelsSet::Draw).after(draw_background))
         .run();
 }
 

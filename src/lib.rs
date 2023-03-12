@@ -1,5 +1,5 @@
 pub mod prelude {
-    pub use crate::{PixelsPlugin, PixelsResource, PixelsStage};
+    pub use crate::{PixelsPlugin, PixelsResource, PixelsSet};
 }
 
 pub use pixels;
@@ -7,7 +7,7 @@ pub use pixels;
 use bevy::{
     diagnostic::{Diagnostic, DiagnosticId, Diagnostics},
     prelude::*,
-    window::{WindowBackendScaleFactorChanged, WindowId, WindowResized},
+    window::{WindowBackendScaleFactorChanged, WindowResized},
     winit::WinitWindows,
 };
 use pixels::{Pixels, SurfaceTexture};
@@ -16,8 +16,8 @@ use pollster::FutureExt as _;
 #[cfg(not(target_arch = "wasm32"))]
 use std::time::Instant;
 
-#[derive(Debug, Hash, PartialEq, Eq, Clone, StageLabel)]
-pub enum PixelsStage {
+#[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
+pub enum PixelsSet {
     Draw,
     Render,
     PostRender,
@@ -26,7 +26,7 @@ pub enum PixelsStage {
 #[derive(Resource)]
 pub struct PixelsResource {
     pub pixels: Pixels,
-    pub window_id: WindowId,
+    pub window: Entity,
 }
 
 // Internal configuration resource for use in `setup` system. Users should set values on
@@ -60,25 +60,15 @@ impl Plugin for PixelsPlugin {
             width: self.width,
             height: self.height,
         })
-        .add_stage_after(
-            CoreStage::PostUpdate,
-            PixelsStage::Draw,
-            SystemStage::parallel(),
+        .configure_set(
+            PixelsSet::Draw
+                .before(PixelsSet::Render)
+                .before(PixelsSet::PostRender), // (PixelsSet::Draw, PixelsSet::Render, PixelsSet::PostRender).chain()
         )
-        .add_stage_after(
-            PixelsStage::Draw,
-            PixelsStage::Render,
-            SystemStage::parallel(),
-        )
-        .add_stage_after(
-            PixelsStage::Render,
-            PixelsStage::PostRender,
-            SystemStage::parallel(),
-        )
-        .add_startup_system_to_stage(StartupStage::PreStartup, Self::setup)
+        .add_startup_system(Self::setup)
         .add_system(Self::window_resize)
         .add_system(Self::window_change)
-        .add_system_to_stage(PixelsStage::Render, Self::render);
+        .add_system(Self::render.in_set(PixelsSet::Render));
     }
 }
 
@@ -90,18 +80,15 @@ impl PixelsPlugin {
         mut commands: Commands,
         mut diagnostics: ResMut<Diagnostics>,
         options: Res<PixelsOptions>,
-        windows: Res<Windows>,
+        windows: Query<(Entity, &Window)>,
         winit_windows: NonSend<WinitWindows>,
     ) {
         diagnostics.add(Diagnostic::new(Self::RENDER_TIME, "render_time", 20).with_suffix("s"));
 
-        let window_id = windows
-            .get_primary()
-            .expect("primary window not found")
-            .id();
+        let (window, _) = windows.get_single().expect("primary window not found");
 
         let winit_window = winit_windows
-            .get_window(window_id)
+            .get_window(window)
             .expect("failed to get primary winit window");
 
         let window_size = winit_window.inner_size();
@@ -121,17 +108,19 @@ impl PixelsPlugin {
         }
         .expect("failed to create pixels");
 
-        commands.insert_resource(PixelsResource { pixels, window_id });
+        commands.insert_resource(PixelsResource { pixels, window });
     }
 
     pub fn window_resize(
         mut window_resized_events: EventReader<WindowResized>,
         mut resource: ResMut<PixelsResource>,
-        windows: Res<Windows>,
+        windows: Query<&Window>,
     ) {
         for event in window_resized_events.iter() {
-            if event.id == resource.window_id {
-                Self::resize_surface_to_window(&mut resource, &windows);
+            if event.window == resource.window {
+                if let Ok(window) = windows.get(event.window) {
+                    Self::resize_surface_to_window(&mut resource, window);
+                }
             }
         }
     }
@@ -141,18 +130,18 @@ impl PixelsPlugin {
             WindowBackendScaleFactorChanged,
         >,
         mut resource: ResMut<PixelsResource>,
-        windows: Res<Windows>,
+        windows: Query<&Window>,
     ) {
         for event in window_backend_scale_factor_changed_events.iter() {
-            if event.id == resource.window_id {
-                Self::resize_surface_to_window(&mut resource, &windows);
+            if event.window == resource.window {
+                if let Ok(window) = windows.get(event.window) {
+                    Self::resize_surface_to_window(&mut resource, window);
+                }
             }
         }
     }
 
-    fn resize_surface_to_window(resource: &mut ResMut<PixelsResource>, windows: &Res<Windows>) {
-        let window = windows.get(resource.window_id).unwrap();
-
+    fn resize_surface_to_window(resource: &mut ResMut<PixelsResource>, window: &Window) {
         let _ = resource
             .pixels
             .resize_surface(window.physical_width(), window.physical_height());
