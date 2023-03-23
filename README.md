@@ -53,7 +53,7 @@ Use `PixelsResource` in your systems.
 ```rust
 fn main_system(mut pixels_resource: ResMut<PixelsResource>) {
     // Get a mutable slice for the pixel buffer
-    let frame: &mut [u8] = pixels_resource.pixels.get_frame_mut();
+    let frame: &mut [u8] = pixels_resource.pixels.frame_mut();
 
     // Fill frame with pixel data
     // ...
