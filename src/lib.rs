@@ -29,11 +29,8 @@ pub struct PixelsResource {
     pub window: Entity,
 }
 
-// Internal configuration resource for use in `setup` system. Users should set values on
-// `PixelsPlugin` instead of inserting this resource directly. Ideally we just read the plugin
-// configuration directly within `setup` system, but this is not currently possible.
 #[derive(Resource)]
-pub struct PixelsOptions {
+struct PixelsOptions {
     width: u32,
     height: u32,
 }
@@ -76,7 +73,7 @@ impl PixelsPlugin {
     pub const RENDER_TIME: DiagnosticId =
         DiagnosticId::from_u128(1187582084072339577959028643519383692);
 
-    pub fn setup(
+    fn setup(
         mut commands: Commands,
         mut diagnostics: ResMut<Diagnostics>,
         options: Res<PixelsOptions>,
@@ -111,7 +108,7 @@ impl PixelsPlugin {
         commands.insert_resource(PixelsResource { pixels, window });
     }
 
-    pub fn window_resize(
+    fn window_resize(
         mut window_resized_events: EventReader<WindowResized>,
         mut resource: ResMut<PixelsResource>,
         windows: Query<&Window>,
@@ -125,7 +122,7 @@ impl PixelsPlugin {
         }
     }
 
-    pub fn window_change(
+    fn window_change(
         mut window_backend_scale_factor_changed_events: EventReader<
             WindowBackendScaleFactorChanged,
         >,
@@ -148,7 +145,7 @@ impl PixelsPlugin {
     }
 
     #[cfg(not(target_arch = "wasm32"))]
-    pub fn render(resource: Res<PixelsResource>, mut diagnostics: ResMut<Diagnostics>) {
+    fn render(resource: Res<PixelsResource>, mut diagnostics: ResMut<Diagnostics>) {
         let start = Instant::now();
 
         resource.pixels.render().expect("failed to render pixels");
@@ -159,7 +156,7 @@ impl PixelsPlugin {
     }
 
     #[cfg(target_arch = "wasm32")]
-    pub fn render(resource: Res<PixelsResource>) {
+    fn render(resource: Res<PixelsResource>) {
         resource.pixels.render().expect("failed to render pixels");
     }
 }
