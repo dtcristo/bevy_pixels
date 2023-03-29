@@ -2,9 +2,30 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added support support for multiple windows. Made possible by the move from `PixelsResource` to
+  `PixelsWrapper` described below.
+- Added `multiple_windows` example demonstrating support for multiple windows.
+- Added `scale_factor` option to control scale factor between logical window size and buffer size
+  when using `auto_resize_buffer`.
+- Added `auto_resize_buffer` option to control automatic resizing of the buffer when the window
+  changes.
+- Added `auto_resize_surface` option to control automatic resizing of the surface when the window
+  changes.
+
 ### Changed
 
+- Updated `bevy` to 0.10.
 - Updated `pixels` to 0.12.
+- Configuration of buffer size has been moved from `PixelsPlugin` to `PixelsOptions`.
+- Primary window buffer is created by providing `Some(PixelsOptions { ... })` to the
+  `primary_window` when creating `PixelsPlugin`. This works the same was as Bevy's own configuration
+  of primary window in the `WindowPlugin`.
+- Resouce `PixelsResource` has been replaced with `PixelsWrapper` component that is automatically
+  added to `Window` entities with the `PixelsOptions` component.
+- Diagnostic `PixelsPlugin::RENDER_TIME` is now recorded in miliseconds instead of seconds.
+- Updated `minimal` example to demonstrate `auto_resize_buffer` feature.
 
 ## [0.8.0] - 2022-12-20
 

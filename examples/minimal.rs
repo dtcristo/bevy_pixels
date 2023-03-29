@@ -1,14 +1,14 @@
 use bevy::{
-    app::AppExit,
     diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
     prelude::*,
-    window::WindowResizeConstraints,
+    window::{WindowResizeConstraints, WindowResolution},
 };
 use bevy_pixels::prelude::*;
 use rand::prelude::*;
 
-const WIDTH: u32 = 320;
-const HEIGHT: u32 = 240;
+const INITIAL_WIDTH: u32 = 320;
+const INITIAL_HEIGHT: u32 = 240;
+const SCALE_FACTOR: f32 = 2.0;
 
 #[derive(Bundle, Debug)]
 struct ObjectBundle {
@@ -42,36 +42,44 @@ struct Color(u8, u8, u8, u8);
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
-            window: WindowDescriptor {
+            primary_window: Some(Window {
                 title: "Hello Bevy Pixels".to_string(),
-                width: WIDTH as f32,
-                height: HEIGHT as f32,
+                resolution: WindowResolution::new(
+                    INITIAL_WIDTH as f32 * SCALE_FACTOR,
+                    INITIAL_HEIGHT as f32 * SCALE_FACTOR,
+                ),
                 resize_constraints: WindowResizeConstraints {
-                    min_width: WIDTH as f32,
-                    min_height: HEIGHT as f32,
+                    min_width: INITIAL_WIDTH as f32 * SCALE_FACTOR,
+                    min_height: INITIAL_HEIGHT as f32 * SCALE_FACTOR,
                     ..default()
                 },
                 fit_canvas_to_parent: true,
                 ..default()
-            },
+            }),
             ..default()
         }))
         .add_plugin(PixelsPlugin {
-            width: WIDTH,
-            height: HEIGHT,
-            ..default()
+            primary_window: Some(PixelsOptions {
+                width: INITIAL_WIDTH,
+                height: INITIAL_HEIGHT,
+                scale_factor: SCALE_FACTOR,
+                ..default()
+            }),
         })
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_plugin(LogDiagnosticsPlugin::default())
         .add_startup_system(setup)
-        .add_system(bounce)
-        .add_system(movement.after(bounce))
-        .add_system(exit_on_escape)
-        .add_system_to_stage(PixelsStage::Draw, draw_background)
-        .add_system_to_stage(PixelsStage::Draw, draw_objects.after(draw_background))
+        .add_system(bevy::window::close_on_esc)
+        .add_systems((bounce, movement).chain().in_set(PixelsSet::Update))
+        .add_systems(
+            (draw_background, draw_objects)
+                .chain()
+                .in_set(PixelsSet::Draw),
+        )
         .run();
 }
 
+/// Spawn object.
 fn setup(mut commands: Commands) {
     let box_object = ObjectBundle {
         position: Position { x: 24, y: 16 },
@@ -85,14 +93,28 @@ fn setup(mut commands: Commands) {
     commands.spawn(box_object);
 }
 
-fn bounce(mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>) {
-    for (position, mut velocity, size, mut color) in query.iter_mut() {
+/// Bounce object off edges of buffer.
+fn bounce(
+    options_query: Query<&PixelsOptions>,
+    mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>,
+) {
+    let Ok(options) = options_query.get_single() else { return };
+
+    for (position, mut velocity, size, mut color) in &mut query {
         let mut bounce = false;
-        if position.x == 0 || position.x + size.width > WIDTH {
+        if position.x == 0 && velocity.x < 0 {
             velocity.x *= -1;
             bounce = true;
         }
-        if position.y == 0 || position.y + size.height > HEIGHT {
+        if position.x + size.width == options.width && velocity.x > 0 {
+            velocity.x *= -1;
+            bounce = true;
+        }
+        if position.y == 0 && velocity.y < 0 {
+            velocity.y *= -1;
+            bounce = true;
+        }
+        if position.y + size.height == options.height && velocity.y > 0 {
             velocity.y *= -1;
             bounce = true;
         }
@@ -104,37 +126,43 @@ fn bounce(mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>) {
     }
 }
 
-fn movement(mut query: Query<(&mut Position, &Velocity)>) {
-    for (mut position, velocity) in query.iter_mut() {
-        position.x = (position.x as i16 + velocity.x) as u32;
-        position.y = (position.y as i16 + velocity.y) as u32;
+/// Move object based on current velocity.
+fn movement(
+    options_query: Query<&PixelsOptions>,
+    mut query: Query<(&mut Position, &Velocity, &Size)>,
+) {
+    let Ok(options) = options_query.get_single() else { return };
+
+    for (mut position, velocity, size) in &mut query {
+        position.x = ((position.x as i16 + velocity.x) as u32).clamp(0, options.width - size.width);
+        position.y =
+            ((position.y as i16 + velocity.y) as u32).clamp(0, options.height - size.height);
     }
 }
 
-fn exit_on_escape(keyboard_input: Res<Input<KeyCode>>, mut app_exit_events: EventWriter<AppExit>) {
-    if keyboard_input.just_pressed(KeyCode::Escape) {
-        app_exit_events.send(AppExit);
-    }
-}
+/// Draw solid background to buffer.
+fn draw_background(mut wrapper_query: Query<&mut PixelsWrapper>) {
+    let Ok(mut wrapper) = wrapper_query.get_single_mut() else { return };
+    let frame = wrapper.pixels.frame_mut();
 
-fn draw_background(mut pixels_resource: ResMut<PixelsResource>) {
-    let frame = pixels_resource.pixels.frame_mut();
     frame.copy_from_slice(&[0x48, 0xb2, 0xe8, 0xff].repeat(frame.len() / 4));
 }
 
+/// Draw objects to buffer.
 fn draw_objects(
-    mut pixels_resource: ResMut<PixelsResource>,
+    mut wrapper_query: Query<(&mut PixelsWrapper, &PixelsOptions)>,
     query: Query<(&Position, &Size, &Color)>,
 ) {
-    let frame = pixels_resource.pixels.frame_mut();
-    let frame_width_bytes = (WIDTH * 4) as usize;
+    let Ok((mut wrapper, options)) = wrapper_query.get_single_mut() else { return };
+    let frame = wrapper.pixels.frame_mut();
+    let frame_width_bytes = (options.width * 4) as usize;
 
-    for (position, size, color) in query.iter() {
+    for (position, size, color) in &query {
         let x_offset = (position.x * 4) as usize;
         let width_bytes = (size.width * 4) as usize;
         let object_row = &[color.0, color.1, color.2, color.3].repeat(size.width as usize);
 
-        for y in position.y..(position.y + size.height - 1) {
+        for y in position.y..(position.y + size.height) {
             let y_offset = y as usize * frame_width_bytes;
             let i = y_offset + x_offset;
             let j = i + width_bytes;
