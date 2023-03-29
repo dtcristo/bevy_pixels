@@ -29,8 +29,8 @@ Add `bevy` and `bevy_pixels` to `Cargo.toml`. Be sure to disable `bevy`'s `rende
 
 ```toml
 [dependencies]
-bevy = { version = "0.9", default_features = false }
-bevy_pixels = "0.8"
+bevy = { version = "0.10", default_features = false }
+bevy_pixels = "0.9"
 ```
 
 Add `PixelsPlugin` to your Bevy project.
@@ -43,34 +43,38 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugin(PixelsPlugin::default())
-        .add_system(main_system)
+        .add_system(draw.in_set(PixelsSet::Draw))
         .run();
 }
 ```
 
-Use `PixelsResource` in your systems.
+Use `PixelsWrapper` in your systems.
 
 ```rust
-fn main_system(mut pixels_resource: ResMut<PixelsResource>) {
-    // Get a mutable slice for the pixel buffer
-    let frame: &mut [u8] = pixels_resource.pixels.frame_mut();
+fn draw(mut wrapper_query: Query<&mut PixelsWrapper>) {
+    // Query the `PixelsWrapper` component that owns an instance of `Pixels` for the given window.
+    let Ok(mut wrapper) = wrapper_query.get_single_mut() else { return };
 
-    // Fill frame with pixel data
+    // Get a mutable slice for the pixel buffer.
+    let frame: &mut [u8] = wrapper.pixels.frame_mut();
+
+    // Fill frame with pixel data.
     // ...
 }
 ```
 
 ## Bevy and Pixels version mapping
 
-| bevy_pixels | bevy | pixels |
-| ----------- | ---- | ------ |
-| 0.1         | 0.5  | 0.3    |
-| 0.2         | 0.5  | 0.8    |
-| 0.3-0.4     | 0.6  | 0.9    |
-| 0.5         | 0.7  | 0.9    |
-| 0.6         | 0.8  | 0.10   |
-| 0.7         | 0.9  | 0.10   |
-| 0.8         | 0.9  | 0.11   |
+| bevy_pixels | bevy  | pixels |
+| ----------- | ----- | ------ |
+| 0.1         | 0.5   | 0.3    |
+| 0.2         | 0.5   | 0.8    |
+| 0.3-0.4     | 0.6   | 0.9    |
+| 0.5         | 0.7   | 0.9    |
+| 0.6         | 0.8   | 0.10   |
+| 0.7         | 0.9   | 0.10   |
+| 0.8         | 0.9   | 0.11   |
+| 0.9         | 0.10  | 0.12   |
 
 ## Examples
 
@@ -117,8 +121,3 @@ at your option.
 Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in the work by you shall be dual licensed as above, without any
 additional terms or conditions.
-
-## Todo
-
-- Add more configuration around how rendering is performed.
-- Add support for multiple windows.
