@@ -43,6 +43,8 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugin(PixelsPlugin::default())
+        // Add systems that draw to the buffer in `PixelsSet::Draw` set (or before)
+        // to ensure they are rendered in the current frame.
         .add_system(draw.in_set(PixelsSet::Draw))
         .run();
 }
@@ -78,7 +80,19 @@ fn draw(mut wrapper_query: Query<&mut PixelsWrapper>) {
 
 ## Examples
 
-### [bounce](https://github.com/dtcristo/bevy_pixels/blob/main/examples/bounce.rs)
+### [minimal](https://github.com/dtcristo/bevy_pixels/blob/main/examples/minimal/src/main.rs)
+
+This example demonstrates rendering a solid color to the pixel buffer.
+
+### [multiple_windows](https://github.com/dtcristo/bevy_pixels/blob/main/examples/multiple_windows/src/main.rs)
+
+This example demonstrate usage of multiple windows each with their own pixel buffer.
+
+### [custom_render](https://github.com/dtcristo/bevy_pixels/blob/main/examples/custom_render/src/main.rs)
+
+This example demonstrate usage of a custom render system. Default `render` cargo feature must be disabled before defining a custom render system. Use `default_features = "false"` in Cargo.toml.
+
+### [bounce](https://github.com/dtcristo/bevy_pixels/blob/main/examples/bounce/src/main.rs)
 
 This example is based off [`minimal-winit`](https://github.com/parasyte/pixels/tree/master/examples/minimal-winit) example from the pixels project. It demonstrates rendering dynamic content to the pixel buffer.
 
@@ -86,8 +100,10 @@ This example is based off [`minimal-winit`](https://github.com/parasyte/pixels/t
 
 ### Running examples natively
 
+Build and run example with [just](https://github.com/casey/just). See [`Justfile`](Justfile) for more details. Install `just` with `cargo install just`.
+
 ```sh
-cargo run --release --example example_name
+just run example_name
 ```
 
 ### Running examples in web browser
@@ -96,16 +112,16 @@ Install dependencies.
 
 ```sh
 rustup target add wasm32-unknown-unknown
-cargo install wasm-bindgen-cli just miniserve
+cargo install wasm-bindgen-cli miniserve
 ```
 
-Build and serve example with [just](https://github.com/casey/just). See [`Justfile`](Justfile) for more details.
+Build and serve example for web.
 
 ```sh
 just serve-web example_name
 ```
 
-Open http://localhost:8080/ in your web browser to run the example.
+Open [localhost:8080](http://localhost:8080/) in your web browser to run the example.
 
 ## License
 
