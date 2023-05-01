@@ -78,11 +78,11 @@ fn draw(mut wrapper_query: Query<&mut PixelsWrapper>) {
 
 ## Examples
 
-### [minimal](https://github.com/dtcristo/bevy_pixels/blob/main/examples/minimal.rs)
+### [bounce](https://github.com/dtcristo/bevy_pixels/blob/main/examples/bounce.rs)
 
-This example is based off [`minimal-winit`](https://github.com/parasyte/pixels/tree/master/examples/minimal-winit) example from the pixels project.
+This example is based off [`minimal-winit`](https://github.com/parasyte/pixels/tree/master/examples/minimal-winit) example from the pixels project. It demonstrates rendering dynamic content to the pixel buffer.
 
-![minimal example](images/minimal.png)
+![bounce example](images/bounce.png)
 
 ### Running examples natively
 
