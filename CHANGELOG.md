@@ -1,12 +1,13 @@
 # Changelog
 
-## [Unreleased]
+## [0.10.0] - 2023-05-01
 
 ### Added
-- Added support for defining a custom render system by disabling default `render` cargo feature. Use `default_features = "false"` in Cargo.toml.
+- Added support for defining a custom render system by disabling default `render` cargo feature. Use
+  `default_features = "false"` in Cargo.toml.
 
 ### Changed
-- Refactord crate into modules.
+- Internally refactored crate into modules.
 - Diagnostic `PixelsPlugin::RENDER_TIME` has been moved to `bevy_pixels::diagnostic::RENDER_TIME`
   module.
 
@@ -109,7 +110,8 @@
 
 Initial release.
 
-[unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.9.0...HEAD
+[unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.10.0
 [0.9.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.9.0
 [0.8.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.8.0
 [0.7.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.7.0
