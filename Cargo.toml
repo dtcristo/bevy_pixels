@@ -26,7 +26,7 @@ bevy = { version = "0.10", default_features = false, features = ["bevy_winit"] }
 pixels = "0.12"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-pollster = "0.2"
+pollster = "0.3"
 
 [workspace]
 members = ["examples/*"]
