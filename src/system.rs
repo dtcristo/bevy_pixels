@@ -10,6 +10,7 @@ use bevy::{
 use pixels::{Pixels, SurfaceTexture};
 #[cfg(target_arch = "wasm32")]
 use pollster::FutureExt as _;
+#[cfg(feature = "render")]
 #[cfg(not(target_arch = "wasm32"))]
 use std::time::Instant;
 
@@ -102,6 +103,7 @@ pub fn resize_buffer(
 }
 
 /// Render buffer to surface.
+#[cfg(feature = "render")]
 pub fn render(
     // TODO: Support `RENDER_TIME` diagnostics on web.
     #[cfg(not(target_arch = "wasm32"))] mut diagnostics: ResMut<Diagnostics>,

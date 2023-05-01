@@ -34,8 +34,12 @@ impl Plugin for PixelsPlugin {
                 system::resize_buffer.after(system::window_resize),
             )
                 .in_base_set(CoreSet::PreUpdate),
-        )
-        .add_system(system::render.in_set(PixelsSet::Render));
+        );
+
+        #[cfg(feature = "render")]
+        {
+            app.add_system(system::render.in_set(PixelsSet::Render));
+        }
 
         // If supplied, attach the primary window [`PixelsOptions`] component to the [`Window`]
         // entity with the [`PrimaryWindow`] marker component (if it exists). This will trigger

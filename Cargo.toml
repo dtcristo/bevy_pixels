@@ -12,9 +12,12 @@ categories = ["game-engines", "graphics", "rendering"]
 exclude = ["images/**/*"]
 
 [features]
-default = ["x11"]
+default = ["render", "x11"]
 
-# Display server protocol support (X11 is enabled by default)
+# Enable default render system.
+render = []
+
+# Display server protocol support (X11 is enabled by default).
 wayland = ["bevy/wayland"]
 x11 = ["bevy/x11"]
 

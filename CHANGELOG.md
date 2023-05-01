@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- Added support for defining a custom render system by disabling default `render` cargo feature. Use `default_features = "false"` in Cargo.toml.
+
 ### Changed
 - Refactord crate into modules.
 - Diagnostic `PixelsPlugin::RENDER_TIME` has been moved to `bevy_pixels::diagnostic::RENDER_TIME`
