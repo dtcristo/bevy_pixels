@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+- Refactord crate into modules.
+- Diagnostic `PixelsPlugin::RENDER_TIME` has been moved to `bevy_pixels::diagnostic::RENDER_TIME`
+  module.
+
 ## [0.9.0] - 2023-03-29
 
 ### Added
