@@ -4,12 +4,12 @@ use bevy_pixels::prelude::*;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(PixelsPlugin::default())
-        .add_system(bevy::window::close_on_esc)
-        .add_system(draw.in_set(PixelsSet::Draw))
+        .add_plugins(PixelsPlugin::default())
+        .add_systems(Update, bevy::window::close_on_esc)
+        .add_systems(PostUpdate, draw.in_set(PixelsSet::Draw))
         // Custom render system. Default `render` cargo feature must be disabled before
         // defining a custom render system. Use `default_features = "false"` in Cargo.toml.
-        .add_system(render.in_set(PixelsSet::Render))
+        .add_systems(Last, render.in_set(PixelsSet::Render))
         .run();
 }
 

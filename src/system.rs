@@ -2,7 +2,7 @@ use crate::diagnostic;
 use crate::prelude::*;
 
 use bevy::{
-    diagnostic::{Diagnostic, Diagnostics},
+    diagnostic::{Diagnostic, DiagnosticsStore},
     prelude::*,
     window::{RawHandleWrapper, WindowBackendScaleFactorChanged, WindowResized},
     winit::WinitWindows,
@@ -15,7 +15,7 @@ use pollster::FutureExt as _;
 use std::time::Instant;
 
 /// Setup diagnostics.
-pub fn setup(mut diagnostics: ResMut<Diagnostics>) {
+pub fn setup(mut diagnostics: ResMut<DiagnosticsStore>) {
     diagnostics.add(Diagnostic::new(diagnostic::RENDER_TIME, "render_time", 20).with_suffix("ms"));
 }
 
@@ -106,7 +106,7 @@ pub fn resize_buffer(
 #[cfg(feature = "render")]
 pub fn render(
     // TODO: Support `RENDER_TIME` diagnostics on web.
-    #[cfg(not(target_arch = "wasm32"))] mut diagnostics: ResMut<Diagnostics>,
+    #[cfg(not(target_arch = "wasm32"))] mut diagnostics: ResMut<DiagnosticsStore>,
     query: Query<&PixelsWrapper>,
 ) {
     #[cfg(not(target_arch = "wasm32"))]
@@ -118,8 +118,13 @@ pub fn render(
 
     #[cfg(not(target_arch = "wasm32"))]
     {
-        let end = Instant::now();
-        let render_time_seconds = end.duration_since(start).as_secs_f64();
-        diagnostics.add_measurement(diagnostic::RENDER_TIME, || render_time_seconds * 1000.0);
+        if let Some(diagnostic) = diagnostics.get_mut(diagnostic::RENDER_TIME) {
+            let end = Instant::now();
+            let render_time_seconds = end.duration_since(start).as_secs_f64();
+            diagnostic.add_measurement(bevy::diagnostic::DiagnosticMeasurement {
+                time: end,
+                value: render_time_seconds * 1000.0,
+            });
+        }
     }
 }

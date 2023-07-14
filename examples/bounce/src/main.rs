@@ -58,7 +58,7 @@ fn main() {
             }),
             ..default()
         }))
-        .add_plugin(PixelsPlugin {
+        .add_plugins(PixelsPlugin {
             primary_window: Some(PixelsOptions {
                 width: INITIAL_WIDTH,
                 height: INITIAL_HEIGHT,
@@ -66,12 +66,13 @@ fn main() {
                 ..default()
             }),
         })
-        .add_plugin(FrameTimeDiagnosticsPlugin::default())
-        .add_plugin(LogDiagnosticsPlugin::default())
-        .add_startup_system(setup)
-        .add_system(bevy::window::close_on_esc)
-        .add_systems((bounce, movement).chain().in_set(PixelsSet::Update))
+        .add_plugins(FrameTimeDiagnosticsPlugin)
+        .add_plugins(LogDiagnosticsPlugin::default())
+        .add_systems(Startup, setup)
+        .add_systems(Update, bevy::window::close_on_esc)
+        .add_systems(Update, (bounce, movement).chain().in_set(PixelsSet::Update))
         .add_systems(
+            PostUpdate,
             (draw_background, draw_objects)
                 .chain()
                 .in_set(PixelsSet::Draw),

@@ -20,25 +20,23 @@ impl Default for PixelsPlugin {
 
 impl Plugin for PixelsPlugin {
     fn build(&self, app: &mut App) {
-        app.configure_sets((
-            PixelsSet::Update.in_base_set(CoreSet::Update),
-            PixelsSet::Draw.in_base_set(CoreSet::PostUpdate),
-            PixelsSet::Render.in_base_set(CoreSet::Last),
-        ))
-        .add_startup_system(system::setup)
-        .add_system(system::create_pixels.in_base_set(CoreSet::First))
-        .add_systems(
-            (
-                system::window_change,
-                system::window_resize,
-                system::resize_buffer.after(system::window_resize),
-            )
-                .in_base_set(CoreSet::PreUpdate),
-        );
+        app.configure_set(Update, PixelsSet::Update)
+            .configure_set(PostUpdate, PixelsSet::Draw)
+            .configure_set(Last, PixelsSet::Render)
+            .add_systems(Startup, system::setup)
+            .add_systems(First, system::create_pixels)
+            .add_systems(
+                PreUpdate,
+                (
+                    system::window_change,
+                    system::window_resize,
+                    system::resize_buffer.after(system::window_resize),
+                ),
+            );
 
         #[cfg(feature = "render")]
         {
-            app.add_system(system::render.in_set(PixelsSet::Render));
+            app.add_systems(Last, system::render.in_set(PixelsSet::Render));
         }
 
         // If supplied, attach the primary window [`PixelsOptions`] component to the [`Window`]

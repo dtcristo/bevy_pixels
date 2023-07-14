@@ -4,10 +4,10 @@ use bevy_pixels::prelude::*;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(PixelsPlugin::default())
-        .add_startup_system(setup)
-        .add_system(bevy::window::close_on_esc)
-        .add_system(draw.in_set(PixelsSet::Draw))
+        .add_plugins(PixelsPlugin::default())
+        .add_systems(Startup, setup)
+        .add_systems(Update, bevy::window::close_on_esc)
+        .add_systems(PostUpdate, draw.in_set(PixelsSet::Draw))
         .run();
 }
 
