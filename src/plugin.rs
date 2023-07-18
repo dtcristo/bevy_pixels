@@ -1,6 +1,12 @@
-use crate::{prelude::*, system};
+use crate::{diagnostic, prelude::*, system};
 
-use bevy::{ecs::system::SystemState, prelude::*, window::PrimaryWindow};
+use bevy::{
+    app::MainScheduleOrder,
+    diagnostic::{Diagnostic, RegisterDiagnostic},
+    ecs::{schedule::ExecutorKind, system::SystemState},
+    prelude::*,
+    window::PrimaryWindow,
+};
 
 /// A [`Plugin`] that defines an integration between Bevy and the [`pixels`](https://github.com/parasyte/pixels)
 /// crate. Should be added to app after [`DefaultPlugins`].
@@ -20,26 +26,33 @@ impl Default for PixelsPlugin {
 
 impl Plugin for PixelsPlugin {
     fn build(&self, app: &mut App) {
-        app.configure_sets((
-            PixelsSet::Update.in_base_set(CoreSet::Update),
-            PixelsSet::Draw.in_base_set(CoreSet::PostUpdate),
-            PixelsSet::Render.in_base_set(CoreSet::Last),
-        ))
-        .add_startup_system(system::setup)
-        .add_system(system::create_pixels.in_base_set(CoreSet::First))
+        let mut draw_schedule = Schedule::new();
+        draw_schedule.set_executor_kind(ExecutorKind::SingleThreaded);
+
+        let mut render_schedule = Schedule::new();
+        render_schedule.set_executor_kind(ExecutorKind::SingleThreaded);
+        #[cfg(feature = "render")]
+        render_schedule.add_systems(system::render);
+
+        app.register_diagnostic(
+            Diagnostic::new(diagnostic::RENDER_TIME, "render_time", 20).with_suffix("ms"),
+        )
+        .add_schedule(Draw, draw_schedule)
+        .add_schedule(Render, render_schedule)
+        .add_systems(First, system::create_pixels)
         .add_systems(
+            PreUpdate,
             (
                 system::window_change,
                 system::window_resize,
                 system::resize_buffer.after(system::window_resize),
-            )
-                .in_base_set(CoreSet::PreUpdate),
+            ),
         );
 
-        #[cfg(feature = "render")]
-        {
-            app.add_system(system::render.in_set(PixelsSet::Render));
-        }
+        // Ensure `Draw` and `Render` schedules execute at the correct moment.
+        let mut order = app.world.resource_mut::<MainScheduleOrder>();
+        order.insert_after(PostUpdate, Draw);
+        order.insert_after(Draw, Render);
 
         // If supplied, attach the primary window [`PixelsOptions`] component to the [`Window`]
         // entity with the [`PrimaryWindow`] marker component (if it exists). This will trigger

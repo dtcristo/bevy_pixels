@@ -1,8 +1,12 @@
+#[cfg(feature = "render")]
+#[cfg(not(target_arch = "wasm32"))]
 use crate::diagnostic;
 use crate::prelude::*;
 
+#[cfg(feature = "render")]
+#[cfg(not(target_arch = "wasm32"))]
+use bevy::diagnostic::Diagnostics;
 use bevy::{
-    diagnostic::{Diagnostic, Diagnostics},
     prelude::*,
     window::{RawHandleWrapper, WindowBackendScaleFactorChanged, WindowResized},
     winit::WinitWindows,
@@ -13,11 +17,6 @@ use pollster::FutureExt as _;
 #[cfg(feature = "render")]
 #[cfg(not(target_arch = "wasm32"))]
 use std::time::Instant;
-
-/// Setup diagnostics.
-pub fn setup(mut diagnostics: ResMut<Diagnostics>) {
-    diagnostics.add(Diagnostic::new(diagnostic::RENDER_TIME, "render_time", 20).with_suffix("ms"));
-}
 
 /// Create [`PixelsWrapper`] (and underlying [`Pixels`] buffer) for all suitable [`Window`] with
 /// a [`PixelsOptions`] component.
@@ -106,7 +105,7 @@ pub fn resize_buffer(
 #[cfg(feature = "render")]
 pub fn render(
     // TODO: Support `RENDER_TIME` diagnostics on web.
-    #[cfg(not(target_arch = "wasm32"))] mut diagnostics: ResMut<Diagnostics>,
+    #[cfg(not(target_arch = "wasm32"))] mut diagnostics: Diagnostics,
     query: Query<&PixelsWrapper>,
 ) {
     #[cfg(not(target_arch = "wasm32"))]

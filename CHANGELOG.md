@@ -1,5 +1,12 @@
 # Changelog
 
+## [unreleased]
+
+### Changed
+- Updated `bevy` to 0.11.
+- Replaced `PixelsSet` with custom `Draw` and `Render` schedules defined in
+  `bevy_pixels::schedule`.
+
 ## [0.10.0] - 2023-05-01
 
 ### Added

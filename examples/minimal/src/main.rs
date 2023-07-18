@@ -3,12 +3,11 @@ use bevy_pixels::prelude::*;
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
-        .add_plugin(PixelsPlugin::default())
-        .add_system(bevy::window::close_on_esc)
-        // Add systems that draw to the buffer in `PixelsSet::Draw` set (or before)
+        .add_plugins((DefaultPlugins, PixelsPlugin::default()))
+        .add_systems(Update, bevy::window::close_on_esc)
+        // Add systems that draw to the buffer in `Draw` schedule
         // to ensure they are rendered in the current frame.
-        .add_system(draw.in_set(PixelsSet::Draw))
+        .add_systems(Draw, draw)
         .run();
 }
 

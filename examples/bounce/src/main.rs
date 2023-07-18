@@ -41,41 +41,41 @@ struct Color(u8, u8, u8, u8);
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins.set(WindowPlugin {
-            primary_window: Some(Window {
-                title: "Hello Bevy Pixels".to_string(),
-                resolution: WindowResolution::new(
-                    INITIAL_WIDTH as f32 * SCALE_FACTOR,
-                    INITIAL_HEIGHT as f32 * SCALE_FACTOR,
-                ),
-                resize_constraints: WindowResizeConstraints {
-                    min_width: INITIAL_WIDTH as f32 * SCALE_FACTOR,
-                    min_height: INITIAL_HEIGHT as f32 * SCALE_FACTOR,
+        .add_plugins((
+            DefaultPlugins.set(WindowPlugin {
+                primary_window: Some(Window {
+                    title: "Hello Bevy Pixels".to_string(),
+                    resolution: WindowResolution::new(
+                        INITIAL_WIDTH as f32 * SCALE_FACTOR,
+                        INITIAL_HEIGHT as f32 * SCALE_FACTOR,
+                    ),
+                    resize_constraints: WindowResizeConstraints {
+                        min_width: INITIAL_WIDTH as f32 * SCALE_FACTOR,
+                        min_height: INITIAL_HEIGHT as f32 * SCALE_FACTOR,
+                        ..default()
+                    },
+                    fit_canvas_to_parent: true,
                     ..default()
-                },
-                fit_canvas_to_parent: true,
+                }),
                 ..default()
             }),
-            ..default()
-        }))
-        .add_plugin(PixelsPlugin {
-            primary_window: Some(PixelsOptions {
-                width: INITIAL_WIDTH,
-                height: INITIAL_HEIGHT,
-                scale_factor: SCALE_FACTOR,
-                ..default()
-            }),
-        })
-        .add_plugin(FrameTimeDiagnosticsPlugin::default())
-        .add_plugin(LogDiagnosticsPlugin::default())
-        .add_startup_system(setup)
-        .add_system(bevy::window::close_on_esc)
-        .add_systems((bounce, movement).chain().in_set(PixelsSet::Update))
+            PixelsPlugin {
+                primary_window: Some(PixelsOptions {
+                    width: INITIAL_WIDTH,
+                    height: INITIAL_HEIGHT,
+                    scale_factor: SCALE_FACTOR,
+                    ..default()
+                }),
+            },
+            FrameTimeDiagnosticsPlugin::default(),
+            LogDiagnosticsPlugin::default(),
+        ))
+        .add_systems(Startup, setup)
         .add_systems(
-            (draw_background, draw_objects)
-                .chain()
-                .in_set(PixelsSet::Draw),
+            Update,
+            (bevy::window::close_on_esc, (bounce, movement).chain()),
         )
+        .add_systems(Draw, (draw_background, draw_objects).chain())
         .run();
 }
 
