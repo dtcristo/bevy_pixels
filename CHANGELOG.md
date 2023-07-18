@@ -1,12 +1,12 @@
 # Changelog
 
-## [unreleased]
+## [0.11.0] - 2023-07-18
 
 ### Changed
 - Updated `bevy` to 0.11.
 - Updated `pixels` to 0.12.
 - Replaced `PixelsSet` with custom `Draw` and `Render` schedules defined in
-  `bevy_pixels::schedule`.
+  `bevy_pixels::schedule` and re-exported in `bevy_pixels::prelude`.
 
 ## [0.10.0] - 2023-05-01
 
@@ -118,7 +118,8 @@
 
 Initial release.
 
-[unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.10.0...HEAD
+[unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.11.0
 [0.10.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.10.0
 [0.9.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.9.0
 [0.8.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.8.0
