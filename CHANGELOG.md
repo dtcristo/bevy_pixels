@@ -4,6 +4,7 @@
 
 ### Changed
 - Updated `bevy` to 0.11.
+- Updated `pixels` to 0.12.
 - Replaced `PixelsSet` with custom `Draw` and `Render` schedules defined in
   `bevy_pixels::schedule`.
 
