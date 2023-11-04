@@ -20,6 +20,7 @@ use std::time::Instant;
 
 /// Create [`PixelsWrapper`] (and underlying [`Pixels`] buffer) for all suitable [`Window`] with
 /// a [`PixelsOptions`] component.
+#[allow(clippy::type_complexity)]
 pub fn create_pixels(
     mut commands: Commands,
     query: Query<(Entity, &PixelsOptions), (With<RawHandleWrapper>, Without<PixelsWrapper>)>,
@@ -56,7 +57,7 @@ pub fn window_resize(
     mut window_resized_events: EventReader<WindowResized>,
     mut query: Query<(&mut PixelsWrapper, &mut PixelsOptions, &Window)>,
 ) {
-    for event in window_resized_events.iter() {
+    for event in window_resized_events.read() {
         if let Ok((mut wrapper, mut options, window)) = query.get_mut(event.window) {
             if options.auto_resize_buffer {
                 options.width = (window.width() / options.scale_factor).floor() as u32;
@@ -75,7 +76,7 @@ pub fn window_change(
     mut window_backend_scale_factor_changed_events: EventReader<WindowBackendScaleFactorChanged>,
     mut query: Query<(&mut PixelsWrapper, &PixelsOptions, &Window)>,
 ) {
-    for event in window_backend_scale_factor_changed_events.iter() {
+    for event in window_backend_scale_factor_changed_events.read() {
         if let Ok((mut wrapper, options, window)) = query.get_mut(event.window) {
             if options.auto_resize_surface {
                 resize_surface_to_window(&mut wrapper, window);
