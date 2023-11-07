@@ -26,10 +26,10 @@ impl Default for PixelsPlugin {
 
 impl Plugin for PixelsPlugin {
     fn build(&self, app: &mut App) {
-        let mut draw_schedule = Schedule::new();
+        let mut draw_schedule = Schedule::new(Draw);
         draw_schedule.set_executor_kind(ExecutorKind::SingleThreaded);
 
-        let mut render_schedule = Schedule::new();
+        let mut render_schedule = Schedule::new(Render);
         render_schedule.set_executor_kind(ExecutorKind::SingleThreaded);
         #[cfg(feature = "render")]
         render_schedule.add_systems(system::render);
@@ -37,8 +37,8 @@ impl Plugin for PixelsPlugin {
         app.register_diagnostic(
             Diagnostic::new(diagnostic::RENDER_TIME, "render_time", 20).with_suffix("ms"),
         )
-        .add_schedule(Draw, draw_schedule)
-        .add_schedule(Render, render_schedule)
+        .add_schedule(draw_schedule)
+        .add_schedule(render_schedule)
         .add_systems(First, system::create_pixels)
         .add_systems(
             PreUpdate,

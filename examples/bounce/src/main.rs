@@ -67,7 +67,7 @@ fn main() {
                     ..default()
                 }),
             },
-            FrameTimeDiagnosticsPlugin::default(),
+            FrameTimeDiagnosticsPlugin,
             LogDiagnosticsPlugin::default(),
         ))
         .add_systems(Startup, setup)
@@ -98,7 +98,9 @@ fn bounce(
     options_query: Query<&PixelsOptions>,
     mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>,
 ) {
-    let Ok(options) = options_query.get_single() else { return };
+    let Ok(options) = options_query.get_single() else {
+        return;
+    };
 
     for (position, mut velocity, size, mut color) in &mut query {
         let mut bounce = false;
@@ -131,7 +133,9 @@ fn movement(
     options_query: Query<&PixelsOptions>,
     mut query: Query<(&mut Position, &Velocity, &Size)>,
 ) {
-    let Ok(options) = options_query.get_single() else { return };
+    let Ok(options) = options_query.get_single() else {
+        return;
+    };
 
     for (mut position, velocity, size) in &mut query {
         position.x = ((position.x as i16 + velocity.x) as u32).clamp(0, options.width - size.width);
@@ -142,7 +146,9 @@ fn movement(
 
 /// Draw solid background to buffer.
 fn draw_background(mut wrapper_query: Query<&mut PixelsWrapper>) {
-    let Ok(mut wrapper) = wrapper_query.get_single_mut() else { return };
+    let Ok(mut wrapper) = wrapper_query.get_single_mut() else {
+        return;
+    };
     let frame = wrapper.pixels.frame_mut();
 
     frame.copy_from_slice(&[0x48, 0xb2, 0xe8, 0xff].repeat(frame.len() / 4));
@@ -153,7 +159,9 @@ fn draw_objects(
     mut wrapper_query: Query<(&mut PixelsWrapper, &PixelsOptions)>,
     query: Query<(&Position, &Size, &Color)>,
 ) {
-    let Ok((mut wrapper, options)) = wrapper_query.get_single_mut() else { return };
+    let Ok((mut wrapper, options)) = wrapper_query.get_single_mut() else {
+        return;
+    };
     let frame = wrapper.pixels.frame_mut();
     let frame_width_bytes = (options.width * 4) as usize;
 

@@ -22,7 +22,7 @@ wayland = ["bevy/wayland"]
 x11 = ["bevy/x11"]
 
 [dependencies]
-bevy = { version = "0.11", default_features = false, features = ["bevy_winit"] }
+bevy = { version = "0.12.0", default_features = false, features = ["bevy_winit"] }
 pixels = "0.13"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
