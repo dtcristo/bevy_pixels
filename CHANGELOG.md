@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.12.0] - 2023-11-11
+
+### Changed
+- Updated `bevy` to 0.12.
+
 ## [0.11.0] - 2023-07-18
 
 ### Changed
@@ -118,7 +123,8 @@
 
 Initial release.
 
-[unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.11.0...HEAD
+[unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.12.0
 [0.11.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.11.0
 [0.10.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.10.0
 [0.9.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.9.0

@@ -29,8 +29,8 @@ Add `bevy` and `bevy_pixels` to `Cargo.toml`. Be sure to disable `bevy`'s `rende
 
 ```toml
 [dependencies]
-bevy = { version = "0.11", default_features = false }
-bevy_pixels = "0.11"
+bevy = { version = "0.12", default_features = false }
+bevy_pixels = "0.12"
 ```
 
 Add `PixelsPlugin` to your Bevy project.
@@ -68,6 +68,7 @@ fn draw(mut wrapper_query: Query<&mut PixelsWrapper>) {
 
 | bevy_pixels | bevy  | pixels |
 | ----------- | ----- | ------ |
+| 0.12        | 0.12  | 0.13   |
 | 0.11        | 0.11  | 0.13   |
 | 0.9-0.10    | 0.10  | 0.12   |
 | 0.8         | 0.9   | 0.11   |
