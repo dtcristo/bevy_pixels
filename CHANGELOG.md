@@ -1,13 +1,21 @@
 # Changelog
 
+## [0.13.0] - 2023-11-11
+
+### Changed
+
+- Updated `bevy` to 0.12.
+
 ## [0.12.0] - 2023-11-11
 
 ### Changed
+
 - Updated `bevy` to 0.12.
 
 ## [0.11.0] - 2023-07-18
 
 ### Changed
+
 - Updated `bevy` to 0.11.
 - Updated `pixels` to 0.12.
 - Replaced `PixelsSet` with custom `Draw` and `Render` schedules defined in
@@ -16,10 +24,12 @@
 ## [0.10.0] - 2023-05-01
 
 ### Added
+
 - Added support for defining a custom render system by disabling default `render` cargo feature. Use
   `default_features = "false"` in Cargo.toml.
 
 ### Changed
+
 - Internally refactored crate into modules.
 - Diagnostic `PixelsPlugin::RENDER_TIME` has been moved to `bevy_pixels::diagnostic::RENDER_TIME`
   module.

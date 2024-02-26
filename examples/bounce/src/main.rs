@@ -54,7 +54,6 @@ fn main() {
                         min_height: INITIAL_HEIGHT as f32 * SCALE_FACTOR,
                         ..default()
                     },
-                    fit_canvas_to_parent: true,
                     ..default()
                 }),
                 ..default()
