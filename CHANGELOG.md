@@ -4,7 +4,7 @@
 
 ### Changed
 
-- Updated `bevy` to 0.12.
+- Updated `bevy` to 0.13.
 
 ## [0.12.0] - 2023-11-11
 
