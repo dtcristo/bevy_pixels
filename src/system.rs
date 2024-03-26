@@ -8,10 +8,10 @@ use crate::prelude::*;
 use bevy::diagnostic::Diagnostics;
 use bevy::{
     prelude::*,
-    window::{RawHandleWrapper, WindowBackendScaleFactorChanged, WindowResized},
+    window::{PresentMode, RawHandleWrapper, WindowBackendScaleFactorChanged, WindowResized},
     winit::WinitWindows,
 };
-use pixels::{Pixels, SurfaceTexture};
+use pixels::{PixelsBuilder, SurfaceTexture};
 #[cfg(target_arch = "wasm32")]
 use pollster::FutureExt as _;
 #[cfg(feature = "render")]
@@ -23,10 +23,13 @@ use std::time::Instant;
 #[allow(clippy::type_complexity)]
 pub fn create_pixels(
     mut commands: Commands,
-    query: Query<(Entity, &PixelsOptions), (With<RawHandleWrapper>, Without<PixelsWrapper>)>,
+    query: Query<
+        (Entity, &PixelsOptions, &Window),
+        (With<RawHandleWrapper>, Without<PixelsWrapper>),
+    >,
     winit_windows: NonSend<WinitWindows>,
 ) {
-    for (entity, options) in &query {
+    for (entity, options, window) in &query {
         let winit_window = winit_windows
             .get_window(entity)
             .expect("failed to get winit window");
@@ -36,14 +39,24 @@ pub fn create_pixels(
             SurfaceTexture::new(window_size.width, window_size.height, winit_window);
 
         let pixels = {
+            let builder = PixelsBuilder::new(options.width, options.height, surface_texture)
+                .present_mode(match window.present_mode {
+                    PresentMode::Fifo => pixels::wgpu::PresentMode::Fifo,
+                    PresentMode::FifoRelaxed => pixels::wgpu::PresentMode::FifoRelaxed,
+                    PresentMode::Mailbox => pixels::wgpu::PresentMode::Mailbox,
+                    PresentMode::Immediate => pixels::wgpu::PresentMode::Immediate,
+                    PresentMode::AutoVsync => pixels::wgpu::PresentMode::AutoVsync,
+                    PresentMode::AutoNoVsync => pixels::wgpu::PresentMode::AutoNoVsync,
+                });
+
             #[cfg(not(target_arch = "wasm32"))]
             {
-                Pixels::new(options.width, options.height, surface_texture)
+                builder.build()
             }
             #[cfg(target_arch = "wasm32")]
             {
                 // TODO: Find a way to asynchronously load pixels on web.
-                Pixels::new_async(options.width, options.height, surface_texture).block_on()
+                builder.build_async().block_on()
             }
         }
         .expect("failed to create pixels");
