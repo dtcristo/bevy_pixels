@@ -19,9 +19,9 @@ pub struct PixelsOptions {
 impl Default for PixelsOptions {
     fn default() -> Self {
         PixelsOptions {
-            width: 640,
-            height: 360,
-            scale_factor: 2.0,
+            width: 1280,
+            height: 720,
+            scale_factor: 1.0,
             auto_resize_buffer: true,
             auto_resize_surface: true,
         }

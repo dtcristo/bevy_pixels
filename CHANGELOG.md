@@ -1,10 +1,11 @@
 # Changelog
 
-## [0.13.0] - 2023-11-11
+## [0.13.0] - 2024-03-26
 
 ### Changed
 
 - Updated `bevy` to 0.13.
+- Change default buffer size to match default window.
 
 ## [0.12.0] - 2023-11-11
 
@@ -133,7 +134,8 @@
 
 Initial release.
 
-[unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.12.0...HEAD
+[unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.13.0
 [0.12.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.12.0
 [0.11.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.11.0
 [0.10.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.10.0
