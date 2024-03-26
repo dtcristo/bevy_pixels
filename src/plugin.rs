@@ -34,20 +34,18 @@ impl Plugin for PixelsPlugin {
         #[cfg(feature = "render")]
         render_schedule.add_systems(system::render);
 
-        app.register_diagnostic(
-            Diagnostic::new(diagnostic::RENDER_TIME, "render_time", 20).with_suffix("ms"),
-        )
-        .add_schedule(draw_schedule)
-        .add_schedule(render_schedule)
-        .add_systems(First, system::create_pixels)
-        .add_systems(
-            PreUpdate,
-            (
-                system::window_change,
-                system::window_resize,
-                system::resize_buffer.after(system::window_resize),
-            ),
-        );
+        app.register_diagnostic(Diagnostic::new(diagnostic::RENDER_TIME).with_suffix("ms"))
+            .add_schedule(draw_schedule)
+            .add_schedule(render_schedule)
+            .add_systems(First, system::create_pixels)
+            .add_systems(
+                PreUpdate,
+                (
+                    system::window_change,
+                    system::window_resize,
+                    system::resize_buffer.after(system::window_resize),
+                ),
+            );
 
         // Ensure `Draw` and `Render` schedules execute at the correct moment.
         let mut order = app.world.resource_mut::<MainScheduleOrder>();

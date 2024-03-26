@@ -1,5 +1,4 @@
-use bevy::diagnostic::DiagnosticId;
+use bevy::diagnostic::DiagnosticPath;
 
 /// Used to measure render time in milliseconds.
-pub const RENDER_TIME: DiagnosticId =
-    DiagnosticId::from_u128(1187582084072339577959028643519383692);
+pub const RENDER_TIME: DiagnosticPath = DiagnosticPath::const_new("render_time");

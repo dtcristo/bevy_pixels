@@ -120,6 +120,6 @@ pub fn render(
     {
         let end = Instant::now();
         let render_time_seconds = end.duration_since(start).as_secs_f64();
-        diagnostics.add_measurement(diagnostic::RENDER_TIME, || render_time_seconds * 1000.0);
+        diagnostics.add_measurement(&diagnostic::RENDER_TIME, || render_time_seconds * 1000.0);
     }
 }
