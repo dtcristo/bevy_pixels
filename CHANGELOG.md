@@ -4,14 +4,15 @@
 
 ### Changed
 
-- Updated `bevy` to 0.13.
+- Updated `bevy` to 0.13 (#21).
+- Respect `present_mode` when creating the `Pixels` instance (#20).
 - Change default buffer size to match default window.
 
 ## [0.12.0] - 2023-11-11
 
 ### Changed
 
-- Updated `bevy` to 0.12.
+- Updated `bevy` to 0.12 (#19).
 
 ## [0.11.0] - 2023-07-18
 
