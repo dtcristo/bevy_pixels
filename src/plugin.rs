@@ -48,7 +48,7 @@ impl Plugin for PixelsPlugin {
             );
 
         // Ensure `Draw` and `Render` schedules execute at the correct moment.
-        let mut order = app.world.resource_mut::<MainScheduleOrder>();
+        let mut order = app.world_mut().resource_mut::<MainScheduleOrder>();
         order.insert_after(PostUpdate, Draw);
         order.insert_after(Draw, Render);
 
@@ -57,11 +57,11 @@ impl Plugin for PixelsPlugin {
         // [`create_pixels`] system for this entity which will initialize the [`Pixels`] buffer.
         if let Some(options) = &self.primary_window {
             let mut system_state: SystemState<Query<Entity, With<PrimaryWindow>>> =
-                SystemState::new(&mut app.world);
-            let query = system_state.get(&app.world);
+                SystemState::new(&mut app.world_mut());
+            let query = system_state.get(&app.world());
 
             if let Ok(entity) = query.get_single() {
-                app.world.entity_mut(entity).insert(*options);
+                app.world_mut().entity_mut(entity).insert(*options);
             };
         }
     }

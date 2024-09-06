@@ -21,11 +21,11 @@ use std::time::Instant;
 /// Create [`PixelsWrapper`] (and underlying [`Pixels`] buffer) for all suitable [`Window`] with
 /// a [`PixelsOptions`] component.
 #[allow(clippy::type_complexity)]
-pub fn create_pixels(
+pub fn create_pixels<'win: 'static>(
     mut commands: Commands,
     query: Query<
         (Entity, &PixelsOptions, &Window),
-        (With<RawHandleWrapper>, Without<PixelsWrapper>),
+        (With<RawHandleWrapper>, Without<PixelsWrapper<'win>>),
     >,
     winit_windows: NonSend<WinitWindows>,
 ) {
@@ -66,9 +66,9 @@ pub fn create_pixels(
 }
 
 /// Resize buffer and surface to window when it is resized.
-pub fn window_resize(
+pub fn window_resize<'win: 'static>(
     mut window_resized_events: EventReader<WindowResized>,
-    mut query: Query<(&mut PixelsWrapper, &mut PixelsOptions, &Window)>,
+    mut query: Query<(&mut PixelsWrapper<'win>, &mut PixelsOptions, &Window)>,
 ) {
     for event in window_resized_events.read() {
         if let Ok((mut wrapper, mut options, window)) = query.get_mut(event.window) {
@@ -85,9 +85,9 @@ pub fn window_resize(
 }
 
 /// Resize surface to window when scale factor changes.
-pub fn window_change(
+pub fn window_change<'win: 'static>(
     mut window_backend_scale_factor_changed_events: EventReader<WindowBackendScaleFactorChanged>,
-    mut query: Query<(&mut PixelsWrapper, &PixelsOptions, &Window)>,
+    mut query: Query<(&mut PixelsWrapper<'win>, &PixelsOptions, &Window)>,
 ) {
     for event in window_backend_scale_factor_changed_events.read() {
         if let Ok((mut wrapper, options, window)) = query.get_mut(event.window) {
@@ -105,8 +105,8 @@ fn resize_surface_to_window(wrapper: &mut PixelsWrapper, window: &Window) {
 }
 
 /// Resize buffer when width and height change.
-pub fn resize_buffer(
-    mut query: Query<(&mut PixelsWrapper, &PixelsOptions), Changed<PixelsOptions>>,
+pub fn resize_buffer<'win: 'static>(
+    mut query: Query<(&mut PixelsWrapper<'win>, &PixelsOptions), Changed<PixelsOptions>>,
 ) {
     for (mut wrapper, options) in &mut query {
         if options.auto_resize_buffer {
@@ -117,10 +117,10 @@ pub fn resize_buffer(
 
 /// Render buffer to surface.
 #[cfg(feature = "render")]
-pub fn render(
+pub fn render<'win: 'static>(
     // TODO: Support `RENDER_TIME` diagnostics on web.
     #[cfg(not(target_arch = "wasm32"))] mut diagnostics: Diagnostics,
-    query: Query<&PixelsWrapper>,
+    query: Query<&PixelsWrapper<'win>>,
 ) {
     #[cfg(not(target_arch = "wasm32"))]
     let start = Instant::now();
