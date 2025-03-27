@@ -12,6 +12,9 @@
     <a href="https://crates.io/crates/bevy_pixels">
       <img src="https://img.shields.io/crates/v/bevy_pixels.svg" alt="crates.io" />
     </a>
+    <a href="https://docs.rs/bevy_pixels">
+      <img src="https://docs.rs/bevy_pixels/badge.svg" alt="cdocs.rs" />
+    </a>
     <a
       href="https://bevyengine.org/learn/quick-start/plugin-development/#main-branch-tracking"
     >
