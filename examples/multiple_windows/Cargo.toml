@@ -1,9 +1,9 @@
 [package]
 name = "example_multiple_windows"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 publish = false
 
 [dependencies]
-bevy = { version = "0.13", default_features = false }
+bevy = { version = "0.14", default-features = false }
 bevy_pixels = { path = "../../" }

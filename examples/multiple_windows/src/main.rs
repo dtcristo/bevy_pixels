@@ -5,7 +5,6 @@ fn main() {
     App::new()
         .add_plugins((DefaultPlugins, PixelsPlugin::default()))
         .add_systems(Startup, setup)
-        .add_systems(Update, bevy::window::close_on_esc)
         .add_systems(Draw, draw)
         .run();
 }

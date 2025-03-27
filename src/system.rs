@@ -21,22 +21,35 @@ use std::time::Instant;
 /// Create [`PixelsWrapper`] (and underlying [`Pixels`] buffer) for all suitable [`Window`] with
 /// a [`PixelsOptions`] component.
 #[allow(clippy::type_complexity)]
-pub fn create_pixels<'win: 'static>(
+pub fn create_pixels(
     mut commands: Commands,
     query: Query<
         (Entity, &PixelsOptions, &Window),
-        (With<RawHandleWrapper>, Without<PixelsWrapper<'win>>),
+        (With<RawHandleWrapper>, Without<PixelsWrapper>),
     >,
     winit_windows: NonSend<WinitWindows>,
 ) {
     for (entity, options, window) in &query {
-        let winit_window = winit_windows
+        let window_wrapper = winit_windows
             .get_window(entity)
-            .expect("failed to get winit window");
+            .expect("failed to get window wrapper");
 
-        let window_size = winit_window.inner_size();
+        let raw_handle_wrapper =
+            RawHandleWrapper::new(window_wrapper).expect("failed to get raw window handle wrapper");
+
+        // SAFETY: Constructing a `ThreadLockedRawWindowHandleWrapper` is not allowed off the main
+        // thread. However here we're performing this action in a Non-Send system (due to presence
+        // of `NonSend<WinitWindows>`). This guarantees that the system will run on the main thread.
+        //
+        // TODO: We're then using this hande to build the `SurfaceTexture` and subsequently the
+        // `Pixels` instance itself and wrapping it in our `PixelsWrapper`. We need to ensure
+        // `PixelWrapper` is not sent between threads by perhaps putting it in a `NonSend` resource
+        // instead of a componenet.
+        let thread_locked_handle = unsafe { raw_handle_wrapper.get_handle() };
+
+        let window_size = window_wrapper.inner_size();
         let surface_texture =
-            SurfaceTexture::new(window_size.width, window_size.height, winit_window);
+            SurfaceTexture::new(window_size.width, window_size.height, thread_locked_handle);
 
         let pixels = {
             let builder = PixelsBuilder::new(options.width, options.height, surface_texture)
@@ -66,9 +79,9 @@ pub fn create_pixels<'win: 'static>(
 }
 
 /// Resize buffer and surface to window when it is resized.
-pub fn window_resize<'win: 'static>(
+pub fn window_resize(
     mut window_resized_events: EventReader<WindowResized>,
-    mut query: Query<(&mut PixelsWrapper<'win>, &mut PixelsOptions, &Window)>,
+    mut query: Query<(&mut PixelsWrapper, &mut PixelsOptions, &Window)>,
 ) {
     for event in window_resized_events.read() {
         if let Ok((mut wrapper, mut options, window)) = query.get_mut(event.window) {
@@ -85,9 +98,9 @@ pub fn window_resize<'win: 'static>(
 }
 
 /// Resize surface to window when scale factor changes.
-pub fn window_change<'win: 'static>(
+pub fn window_change(
     mut window_backend_scale_factor_changed_events: EventReader<WindowBackendScaleFactorChanged>,
-    mut query: Query<(&mut PixelsWrapper<'win>, &PixelsOptions, &Window)>,
+    mut query: Query<(&mut PixelsWrapper, &PixelsOptions, &Window)>,
 ) {
     for event in window_backend_scale_factor_changed_events.read() {
         if let Ok((mut wrapper, options, window)) = query.get_mut(event.window) {
@@ -105,8 +118,8 @@ fn resize_surface_to_window(wrapper: &mut PixelsWrapper, window: &Window) {
 }
 
 /// Resize buffer when width and height change.
-pub fn resize_buffer<'win: 'static>(
-    mut query: Query<(&mut PixelsWrapper<'win>, &PixelsOptions), Changed<PixelsOptions>>,
+pub fn resize_buffer(
+    mut query: Query<(&mut PixelsWrapper, &PixelsOptions), Changed<PixelsOptions>>,
 ) {
     for (mut wrapper, options) in &mut query {
         if options.auto_resize_buffer {
@@ -117,10 +130,10 @@ pub fn resize_buffer<'win: 'static>(
 
 /// Render buffer to surface.
 #[cfg(feature = "render")]
-pub fn render<'win: 'static>(
+pub fn render(
     // TODO: Support `RENDER_TIME` diagnostics on web.
     #[cfg(not(target_arch = "wasm32"))] mut diagnostics: Diagnostics,
-    query: Query<&PixelsWrapper<'win>>,
+    query: Query<&PixelsWrapper>,
 ) {
     #[cfg(not(target_arch = "wasm32"))]
     let start = Instant::now();

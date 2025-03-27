@@ -68,6 +68,7 @@ fn draw(mut wrapper_query: Query<&mut PixelsWrapper>) {
 
 | bevy_pixels | bevy | pixels |
 | ----------- | ---- | ------ |
+| 0.14        | 0.14 | 0.15   |
 | 0.13        | 0.13 | 0.13   |
 | 0.12        | 0.12 | 0.13   |
 | 0.11        | 0.11 | 0.13   |

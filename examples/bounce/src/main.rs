@@ -70,10 +70,7 @@ fn main() {
             LogDiagnosticsPlugin::default(),
         ))
         .add_systems(Startup, setup)
-        .add_systems(
-            Update,
-            (bevy::window::close_on_esc, (bounce, movement).chain()),
-        )
+        .add_systems(Update, (bounce, movement).chain())
         .add_systems(Draw, (draw_background, draw_objects).chain())
         .run();
 }

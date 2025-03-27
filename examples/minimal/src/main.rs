@@ -4,7 +4,6 @@ use bevy_pixels::prelude::*;
 fn main() {
     App::new()
         .add_plugins((DefaultPlugins, PixelsPlugin::default()))
-        .add_systems(Update, bevy::window::close_on_esc)
         // Add systems that draw to the buffer to `Draw` schedule
         // to ensure they are rendered in the current frame.
         .add_systems(Draw, draw)

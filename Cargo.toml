@@ -1,9 +1,9 @@
 [package]
 name = "bevy_pixels"
 description = "Bevy plugin that uses Pixels (a tiny pixel buffer) for rendering"
-version = "0.14.0"
+version = "0.14.0-dev"
 authors = ["David Cristofaro <david@dtcristo.com>"]
-edition = "2021"
+edition = "2024"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/dtcristo/bevy_pixels"
@@ -22,12 +22,10 @@ wayland = ["bevy/wayland"]
 x11 = ["bevy/x11"]
 
 [dependencies]
-bevy = { version = "0.14", default_features = false, features = ["bevy_winit"] }
+bevy = { version = "0.14", default-features = false, features = ["bevy_winit"] }
 winit = { version = "0.30", features = ["rwh_06"] }
-pixels = "0.13"
-
-[patch.crates-io]
-pixels = { git = "https://github.com/mkrasnitski/pixels.git", branch = "bump-wgpu-winit" }
+pixels = "0.15"
+raw-window-handle = "0.6"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 pollster = "0.3"
