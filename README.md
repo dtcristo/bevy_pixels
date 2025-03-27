@@ -29,7 +29,7 @@ Add `bevy` and `bevy_pixels` to `Cargo.toml`. Be sure to disable `bevy`'s `rende
 
 ```toml
 [dependencies]
-bevy = { version = "0.14", default_features = false }
+bevy = { version = "0.14", default-features = false }
 bevy_pixels = "0.14"
 ```
 
@@ -93,7 +93,7 @@ This example demonstrate usage of multiple windows each with their own pixel buf
 
 ### [custom_render](https://github.com/dtcristo/bevy_pixels/blob/main/examples/custom_render/src/main.rs)
 
-This example demonstrate usage of a custom render system. Default `render` cargo feature must be disabled before defining a custom render system. Use `default_features = "false"` in Cargo.toml.
+This example demonstrate usage of a custom render system. Default `render` cargo feature must be disabled before defining a custom render system. Use `default-features = "false"` in Cargo.toml.
 
 ### [bounce](https://github.com/dtcristo/bevy_pixels/blob/main/examples/bounce/src/main.rs)
 

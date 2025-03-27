@@ -6,7 +6,7 @@ fn main() {
         .add_plugins((DefaultPlugins, PixelsPlugin::default()))
         .add_systems(Draw, draw)
         // Custom render system. Default `render` cargo feature must be disabled before
-        // defining a custom render system. Use `default_features = "false"` in Cargo.toml.
+        // defining a custom render system. Use `default-features = "false"` in Cargo.toml.
         .add_systems(Render, render)
         .run();
 }
