@@ -13,11 +13,11 @@
       <img src="https://img.shields.io/crates/v/bevy_pixels.svg" alt="crates.io" />
     </a>
     <a
-      href="https://github.com/bevyengine/bevy/blob/main/docs/plugins_guidelines.md#main-branch-tracking"
+      href="https://bevyengine.org/learn/quick-start/plugin-development/#main-branch-tracking"
     >
       <img
         src="https://img.shields.io/badge/Bevy%20tracking-released%20version-lightblue"
-        alt="Bevy tracking"
+        alt="Following released Bevy versions"
       />
     </a>
   </p>
