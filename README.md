@@ -9,11 +9,14 @@
     </strong>
   </p>
   <p>
+    <a href="https://github.com/dtcristo/bevy_pixels#license">
+      <img src="https://img.shields.io/badge/license-MIT%2FApache-blue.svg" alt="License" />
+    </a>
     <a href="https://crates.io/crates/bevy_pixels">
       <img src="https://img.shields.io/crates/v/bevy_pixels.svg" alt="crates.io" />
     </a>
     <a href="https://docs.rs/bevy_pixels">
-      <img src="https://docs.rs/bevy_pixels/badge.svg" alt="cdocs.rs" />
+      <img src="https://docs.rs/bevy_pixels/badge.svg" alt="Docs" />
     </a>
     <a
       href="https://bevyengine.org/learn/quick-start/plugin-development/#main-branch-tracking"
@@ -32,8 +35,8 @@ Add `bevy` and `bevy_pixels` to `Cargo.toml`. Be sure to disable `bevy`'s `rende
 
 ```toml
 [dependencies]
-bevy = { version = "0.14", default-features = false }
-bevy_pixels = "0.14"
+bevy = { version = "0.15", default-features = false }
+bevy_pixels = "0.15"
 ```
 
 Add `PixelsPlugin` to your Bevy project.
@@ -71,6 +74,7 @@ fn draw(mut wrapper_query: Query<&mut PixelsWrapper>) {
 
 | bevy_pixels | bevy | pixels |
 | ----------- | ---- | ------ |
+| 0.15        | 0.15 | 0.15   |
 | 0.14        | 0.14 | 0.15   |
 | 0.13        | 0.13 | 0.13   |
 | 0.12        | 0.12 | 0.13   |
