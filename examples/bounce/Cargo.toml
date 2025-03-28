@@ -5,6 +5,6 @@ edition = "2024"
 publish = false
 
 [dependencies]
-bevy = { version = "0.14", default-features = false }
+bevy = { version = "0.15", default-features = false }
 bevy_pixels = { path = "../../" }
 rand = "0.8"
