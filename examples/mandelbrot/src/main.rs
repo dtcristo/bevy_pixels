@@ -6,11 +6,11 @@ use bevy::{
 };
 use bevy_pixels::prelude::*;
 
-const BUFFER_WIDTH: u32 = 320;
-const BUFFER_HEIGHT: u32 = 240;
+const BUFFER_WIDTH: u32 = 80;
+const BUFFER_HEIGHT: u32 = 60;
 const WINDOW_WIDTH: u32 = (BUFFER_WIDTH as f32 * SCALE_FACTOR) as u32;
 const WINDOW_HEIGHT: u32 = (BUFFER_HEIGHT as f32 * SCALE_FACTOR) as u32;
-const SCALE_FACTOR: f32 = 3.0;
+const SCALE_FACTOR: f32 = 6.0;
 const MAX_ITERATIONS: u32 = 96;
 
 #[derive(Resource, Debug)]
