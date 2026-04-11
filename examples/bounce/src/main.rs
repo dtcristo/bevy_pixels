@@ -124,10 +124,7 @@ fn bounce(
 }
 
 /// Move object based on current velocity.
-fn movement(
-    options: Single<&PixelsOptions>,
-    mut query: Query<(&mut Position, &Velocity, &Size)>,
-) {
+fn movement(options: Single<&PixelsOptions>, mut query: Query<(&mut Position, &Velocity, &Size)>) {
     for (mut position, velocity, size) in &mut query {
         position.x = ((position.x as i16 + velocity.x) as u32).clamp(0, options.width - size.width);
         position.y =

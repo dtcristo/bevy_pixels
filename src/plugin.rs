@@ -3,11 +3,7 @@ use crate::{diagnostic, prelude::*, system};
 use bevy::{
     app::MainScheduleOrder,
     diagnostic::{Diagnostic, RegisterDiagnostic},
-    ecs::{
-        schedule::ExecutorKind,
-        system::SystemState,
-        world::World,
-    },
+    ecs::{schedule::ExecutorKind, system::SystemState, world::World},
     prelude::*,
     window::{PrimaryWindow, WindowBackendScaleFactorChanged, WindowResized},
 };
@@ -85,7 +81,8 @@ mod tests {
     use bevy::ecs::{message::Messages, schedule::ScheduleLabel};
 
     fn schedule_index(order: &MainScheduleOrder, label: impl ScheduleLabel) -> usize {
-        order.labels
+        order
+            .labels
             .iter()
             .position(|current| (**current).eq(&label))
             .expect("schedule should be present")
@@ -114,9 +111,10 @@ mod tests {
         app.add_plugins(PixelsPlugin::default());
 
         assert!(app.world().contains_resource::<Messages<WindowResized>>());
-        assert!(app
-            .world()
-            .contains_resource::<Messages<WindowBackendScaleFactorChanged>>());
+        assert!(
+            app.world()
+                .contains_resource::<Messages<WindowBackendScaleFactorChanged>>()
+        );
     }
 
     #[test]
@@ -151,7 +149,10 @@ mod tests {
     #[test]
     fn plugin_inserts_default_options_into_existing_primary_window() {
         let mut app = App::new();
-        let window = app.world_mut().spawn((Window::default(), PrimaryWindow)).id();
+        let window = app
+            .world_mut()
+            .spawn((Window::default(), PrimaryWindow))
+            .id();
 
         app.add_plugins(PixelsPlugin::default());
 
@@ -164,7 +165,10 @@ mod tests {
     #[test]
     fn plugin_inserts_custom_options_into_existing_primary_window() {
         let mut app = App::new();
-        let window = app.world_mut().spawn((Window::default(), PrimaryWindow)).id();
+        let window = app
+            .world_mut()
+            .spawn((Window::default(), PrimaryWindow))
+            .id();
         let options = PixelsOptions {
             width: 320,
             height: 240,
@@ -183,7 +187,10 @@ mod tests {
     #[test]
     fn plugin_skips_primary_window_insertion_when_disabled() {
         let mut app = App::new();
-        let window = app.world_mut().spawn((Window::default(), PrimaryWindow)).id();
+        let window = app
+            .world_mut()
+            .spawn((Window::default(), PrimaryWindow))
+            .id();
 
         app.add_plugins(PixelsPlugin {
             primary_window: None,

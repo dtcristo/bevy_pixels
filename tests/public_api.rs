@@ -40,7 +40,9 @@ fn count_render(mut counts: ResMut<ScheduleCounts>) {
 }
 
 fn add_primary_window(app: &mut App) -> Entity {
-    app.world_mut().spawn((Window::default(), PrimaryWindow)).id()
+    app.world_mut()
+        .spawn((Window::default(), PrimaryWindow))
+        .id()
 }
 
 #[test]
@@ -182,7 +184,8 @@ fn plugin_registers_window_messages_for_public_apps() {
     });
 
     assert!(app.world().contains_resource::<Messages<WindowResized>>());
-    assert!(app
-        .world()
-        .contains_resource::<Messages<WindowBackendScaleFactorChanged>>());
+    assert!(
+        app.world()
+            .contains_resource::<Messages<WindowBackendScaleFactorChanged>>()
+    );
 }
