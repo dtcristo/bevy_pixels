@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.16.0] - 2026-04-11
 
 ### Added
 
@@ -161,7 +161,8 @@
 
 Initial release.
 
-[unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.15.0...HEAD
+[Unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.16.0...HEAD
+[0.16.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.16.0
 [0.15.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.15.0
 [0.14.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.14.0
 [0.13.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.13.0
