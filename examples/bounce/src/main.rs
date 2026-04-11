@@ -4,7 +4,7 @@ use bevy::{
     window::{WindowResizeConstraints, WindowResolution},
 };
 use bevy_pixels::prelude::*;
-use rand::prelude::*;
+use rand::random;
 
 const INITIAL_WIDTH: u32 = 320;
 const INITIAL_HEIGHT: u32 = 240;
@@ -46,9 +46,10 @@ fn main() {
                 primary_window: Some(Window {
                     title: "Hello Bevy Pixels".to_string(),
                     resolution: WindowResolution::new(
-                        INITIAL_WIDTH as f32 * SCALE_FACTOR,
-                        INITIAL_HEIGHT as f32 * SCALE_FACTOR,
-                    ),
+                        (INITIAL_WIDTH as f32 * SCALE_FACTOR) as u32,
+                        (INITIAL_HEIGHT as f32 * SCALE_FACTOR) as u32,
+                    )
+                    .with_scale_factor_override(1.0),
                     resize_constraints: WindowResizeConstraints {
                         min_width: INITIAL_WIDTH as f32 * SCALE_FACTOR,
                         min_height: INITIAL_HEIGHT as f32 * SCALE_FACTOR,
@@ -66,7 +67,7 @@ fn main() {
                     ..default()
                 }),
             },
-            FrameTimeDiagnosticsPlugin,
+            FrameTimeDiagnosticsPlugin::default(),
             LogDiagnosticsPlugin::default(),
         ))
         .add_systems(Startup, setup)
@@ -94,7 +95,7 @@ fn bounce(
     options_query: Query<&PixelsOptions>,
     mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>,
 ) {
-    let Ok(options) = options_query.get_single() else {
+    let Ok(options) = options_query.single() else {
         return;
     };
 
@@ -129,7 +130,7 @@ fn movement(
     options_query: Query<&PixelsOptions>,
     mut query: Query<(&mut Position, &Velocity, &Size)>,
 ) {
-    let Ok(options) = options_query.get_single() else {
+    let Ok(options) = options_query.single() else {
         return;
     };
 
@@ -142,7 +143,7 @@ fn movement(
 
 /// Draw solid background to buffer.
 fn draw_background(mut wrapper_query: Query<&mut PixelsWrapper>) {
-    let Ok(mut wrapper) = wrapper_query.get_single_mut() else {
+    let Ok(mut wrapper) = wrapper_query.single_mut() else {
         return;
     };
     let frame = wrapper.pixels.frame_mut();
@@ -155,7 +156,7 @@ fn draw_objects(
     mut wrapper_query: Query<(&mut PixelsWrapper, &PixelsOptions)>,
     query: Query<(&Position, &Size, &Color)>,
 ) {
-    let Ok((mut wrapper, options)) = wrapper_query.get_single_mut() else {
+    let Ok((mut wrapper, options)) = wrapper_query.single_mut() else {
         return;
     };
     let frame = wrapper.pixels.frame_mut();

@@ -56,13 +56,17 @@ impl Plugin for PixelsPlugin {
         // entity with the [`PrimaryWindow`] marker component (if it exists). This will trigger
         // [`create_pixels`] system for this entity which will initialize the [`Pixels`] buffer.
         if let Some(options) = &self.primary_window {
+            let mut world = app.world_mut();
             let mut system_state: SystemState<Query<Entity, With<PrimaryWindow>>> =
-                SystemState::new(&mut app.world_mut());
-            let query = system_state.get(&app.world());
-
-            if let Ok(entity) = query.get_single() {
-                app.world_mut().entity_mut(entity).insert(*options);
+                SystemState::new(&mut world);
+            let primary_window = {
+                let query = system_state.get(&world);
+                query.single().ok()
             };
+
+            if let Some(entity) = primary_window {
+                world.entity_mut(entity).insert(*options);
+            }
         }
     }
 }

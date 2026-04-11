@@ -1,7 +1,7 @@
 [package]
 name = "bevy_pixels"
 description = "Bevy plugin that uses Pixels (a tiny pixel buffer) for rendering"
-version = "0.15.0"
+version = "0.16.0-dev"
 authors = ["David Cristofaro <david@dtcristo.com>"]
 edition = "2024"
 license = "MIT OR Apache-2.0"
@@ -22,9 +22,9 @@ wayland = ["bevy/wayland"]
 x11 = ["bevy/x11"]
 
 [dependencies]
-bevy = { version = "0.15", default-features = false, features = ["bevy_winit"] }
+bevy = { version = "0.18", default-features = false, features = ["bevy_winit"] }
 winit = { version = "0.30", features = ["rwh_06"] }
-pixels = "0.15"
+pixels = "0.16"
 raw-window-handle = "0.6"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]

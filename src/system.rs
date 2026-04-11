@@ -7,9 +7,9 @@ use crate::prelude::*;
 #[cfg(not(target_arch = "wasm32"))]
 use bevy::diagnostic::Diagnostics;
 use bevy::{
+    ecs::system::NonSendMarker,
     prelude::*,
     window::{PresentMode, RawHandleWrapper, WindowBackendScaleFactorChanged, WindowResized},
-    winit::WinitWindows,
 };
 use pixels::{PixelsBuilder, SurfaceTexture};
 #[cfg(target_arch = "wasm32")]
@@ -24,32 +24,21 @@ use std::time::Instant;
 pub fn create_pixels(
     mut commands: Commands,
     query: Query<
-        (Entity, &PixelsOptions, &Window),
+        (Entity, &PixelsOptions, &Window, &RawHandleWrapper),
         (With<RawHandleWrapper>, Without<PixelsWrapper>),
     >,
-    winit_windows: NonSend<WinitWindows>,
+    _main_thread: NonSendMarker,
 ) {
-    for (entity, options, window) in &query {
-        let window_wrapper = winit_windows
-            .get_window(entity)
-            .expect("failed to get window wrapper");
-
-        let raw_handle_wrapper =
-            RawHandleWrapper::new(window_wrapper).expect("failed to get raw window handle wrapper");
-
-        // SAFETY: Constructing a `ThreadLockedRawWindowHandleWrapper` is not allowed off the main
-        // thread. However here we're performing this action in a Non-Send system (due to presence
-        // of `NonSend<WinitWindows>`). This guarantees that the system will run on the main thread.
-        //
-        // TODO: We're then using this hande to build the `SurfaceTexture` and subsequently the
-        // `Pixels` instance itself and wrapping it in our `PixelsWrapper`. We need to ensure
-        // `PixelWrapper` is not sent between threads by perhaps putting it in a `NonSend` resource
-        // instead of a componenet.
+    for (entity, options, window, raw_handle_wrapper) in &query {
+        // SAFETY: `NonSendMarker` forces this system onto Bevy's main thread, which is required by
+        // `RawHandleWrapper::get_handle` on platforms whose window handles are thread-affine.
         let thread_locked_handle = unsafe { raw_handle_wrapper.get_handle() };
 
-        let window_size = window_wrapper.inner_size();
-        let surface_texture =
-            SurfaceTexture::new(window_size.width, window_size.height, thread_locked_handle);
+        let surface_texture = SurfaceTexture::new(
+            window.physical_width(),
+            window.physical_height(),
+            thread_locked_handle,
+        );
 
         let pixels = {
             let builder = PixelsBuilder::new(options.width, options.height, surface_texture)
@@ -80,7 +69,7 @@ pub fn create_pixels(
 
 /// Resize buffer and surface to window when it is resized.
 pub fn window_resize(
-    mut window_resized_events: EventReader<WindowResized>,
+    mut window_resized_events: MessageReader<WindowResized>,
     mut query: Query<(&mut PixelsWrapper, &mut PixelsOptions, &Window)>,
 ) {
     for event in window_resized_events.read() {
@@ -99,7 +88,7 @@ pub fn window_resize(
 
 /// Resize surface to window when scale factor changes.
 pub fn window_change(
-    mut window_backend_scale_factor_changed_events: EventReader<WindowBackendScaleFactorChanged>,
+    mut window_backend_scale_factor_changed_events: MessageReader<WindowBackendScaleFactorChanged>,
     mut query: Query<(&mut PixelsWrapper, &PixelsOptions, &Window)>,
 ) {
     for event in window_backend_scale_factor_changed_events.read() {

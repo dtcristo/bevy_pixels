@@ -12,7 +12,7 @@ fn main() {
 
 /// Draw solid background to window buffer.
 fn draw(mut wrapper_query: Query<&mut PixelsWrapper>) {
-    let Ok(mut wrapper) = wrapper_query.get_single_mut() else {
+    let Ok(mut wrapper) = wrapper_query.single_mut() else {
         return;
     };
     let frame = wrapper.pixels.frame_mut();

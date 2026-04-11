@@ -1,4 +1,4 @@
 pub use crate::{
-    schedule::{Draw, Render},
     PixelsOptions, PixelsPlugin, PixelsWrapper,
+    schedule::{Draw, Render},
 };

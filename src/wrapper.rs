@@ -8,8 +8,9 @@ pub struct PixelsWrapper {
 }
 
 #[cfg(target_arch = "wasm32")]
-// Web builds run this integration on the browser's main thread, so `Pixels` never crosses thread
-// boundaries even though `wgpu` marks it as !Send/!Sync on wasm targets.
+// Bevy components must be Send + Sync, but pixels/wgpu keep the web surface and device types
+// thread-affine on wasm. This integration runs on the browser main thread, so marking the wrapper
+// as Send + Sync keeps it storable in the ECS without changing its actual execution model.
 unsafe impl Send for PixelsWrapper {}
 
 #[cfg(target_arch = "wasm32")]

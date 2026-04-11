@@ -35,8 +35,8 @@ Add `bevy` and `bevy_pixels` to `Cargo.toml`. Be sure to disable `bevy`'s `rende
 
 ```toml
 [dependencies]
-bevy = { version = "0.15", default-features = false }
-bevy_pixels = "0.15"
+bevy = { version = "0.18", default-features = false }
+bevy_pixels = "0.16"
 ```
 
 Add `PixelsPlugin` to your Bevy project.
@@ -60,7 +60,7 @@ Use `PixelsWrapper` in your systems.
 ```rust
 fn draw(mut wrapper_query: Query<&mut PixelsWrapper>) {
     // Query the `PixelsWrapper` component that owns an instance of `Pixels` for the given window.
-    let Ok(mut wrapper) = wrapper_query.get_single_mut() else { return };
+    let Ok(mut wrapper) = wrapper_query.single_mut() else { return };
 
     // Get a mutable slice for the pixel buffer.
     let frame: &mut [u8] = wrapper.pixels.frame_mut();
@@ -74,6 +74,7 @@ fn draw(mut wrapper_query: Query<&mut PixelsWrapper>) {
 
 | bevy_pixels | bevy | pixels |
 | ----------- | ---- | ------ |
+| 0.16        | 0.18 | 0.16   |
 | 0.15        | 0.15 | 0.15   |
 | 0.14        | 0.14 | 0.15   |
 | 0.13        | 0.13 | 0.13   |
