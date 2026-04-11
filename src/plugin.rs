@@ -9,7 +9,7 @@ use bevy::{
         world::World,
     },
     prelude::*,
-    window::PrimaryWindow,
+    window::{PrimaryWindow, WindowBackendScaleFactorChanged, WindowResized},
 };
 
 /// A [`Plugin`] that defines an integration between Bevy and the [`pixels`](https://github.com/parasyte/pixels)
@@ -51,6 +51,8 @@ impl Plugin for PixelsPlugin {
         render_schedule.add_systems(system::render);
 
         app.register_diagnostic(Diagnostic::new(diagnostic::RENDER_TIME).with_suffix("ms"))
+            .add_message::<WindowResized>()
+            .add_message::<WindowBackendScaleFactorChanged>()
             .add_schedule(draw_schedule)
             .add_schedule(render_schedule)
             .add_systems(First, system::create_pixels)
@@ -80,7 +82,7 @@ impl Plugin for PixelsPlugin {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use bevy::ecs::schedule::ScheduleLabel;
+    use bevy::ecs::{message::Messages, schedule::ScheduleLabel};
 
     fn schedule_index(order: &MainScheduleOrder, label: impl ScheduleLabel) -> usize {
         order.labels
@@ -104,6 +106,17 @@ mod tests {
 
         assert!(app.get_schedule(Draw).is_some());
         assert!(app.get_schedule(Render).is_some());
+    }
+
+    #[test]
+    fn plugin_registers_window_messages() {
+        let mut app = App::new();
+        app.add_plugins(PixelsPlugin::default());
+
+        assert!(app.world().contains_resource::<Messages<WindowResized>>());
+        assert!(app
+            .world()
+            .contains_resource::<Messages<WindowBackendScaleFactorChanged>>());
     }
 
     #[test]

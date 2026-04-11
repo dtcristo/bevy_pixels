@@ -1,5 +1,6 @@
 use bevy::{
     app::MainScheduleOrder,
+    ecs::message::Messages,
     prelude::*,
     window::{PrimaryWindow, WindowBackendScaleFactorChanged, WindowResized},
 };
@@ -42,16 +43,9 @@ fn add_primary_window(app: &mut App) -> Entity {
     app.world_mut().spawn((Window::default(), PrimaryWindow)).id()
 }
 
-fn test_app() -> App {
-    let mut app = App::new();
-    app.add_message::<WindowResized>()
-        .add_message::<WindowBackendScaleFactorChanged>();
-    app
-}
-
 #[test]
 fn public_api_inserts_default_primary_window_options() {
-    let mut app = test_app();
+    let mut app = App::new();
     let window = add_primary_window(&mut app);
 
     app.add_plugins(PixelsPlugin::default());
@@ -64,7 +58,7 @@ fn public_api_inserts_default_primary_window_options() {
 
 #[test]
 fn public_api_inserts_custom_primary_window_options() {
-    let mut app = test_app();
+    let mut app = App::new();
     let window = add_primary_window(&mut app);
     let options = PixelsOptions {
         width: 320,
@@ -83,7 +77,7 @@ fn public_api_inserts_custom_primary_window_options() {
 
 #[test]
 fn only_primary_window_receives_auto_inserted_options() {
-    let mut app = test_app();
+    let mut app = App::new();
     let primary = add_primary_window(&mut app);
     let secondary = app.world_mut().spawn(Window::default()).id();
 
@@ -98,7 +92,7 @@ fn only_primary_window_receives_auto_inserted_options() {
 
 #[test]
 fn plugin_with_primary_window_none_updates_without_inserting_options() {
-    let mut app = test_app();
+    let mut app = App::new();
     let window = add_primary_window(&mut app);
 
     app.add_plugins(PixelsPlugin {
@@ -111,7 +105,7 @@ fn plugin_with_primary_window_none_updates_without_inserting_options() {
 
 #[test]
 fn draw_and_render_schedules_run_in_expected_frame_order() {
-    let mut app = test_app();
+    let mut app = App::new();
     app.init_resource::<ExecutionTrace>();
     app.add_plugins(PixelsPlugin {
         primary_window: None,
@@ -131,7 +125,7 @@ fn draw_and_render_schedules_run_in_expected_frame_order() {
 
 #[test]
 fn draw_and_render_schedules_run_every_frame() {
-    let mut app = test_app();
+    let mut app = App::new();
     app.init_resource::<ScheduleCounts>();
     app.add_plugins(PixelsPlugin {
         primary_window: None,
@@ -151,7 +145,7 @@ fn draw_and_render_schedules_run_every_frame() {
 
 #[test]
 fn public_schedule_order_resource_matches_custom_schedules() {
-    let mut app = test_app();
+    let mut app = App::new();
     app.add_plugins(PixelsPlugin {
         primary_window: None,
     });
@@ -178,4 +172,17 @@ fn public_schedule_order_resource_matches_custom_schedules() {
     assert_eq!(draw_index, post_update_index + 1);
     assert_eq!(render_index, draw_index + 1);
     assert!(render_index < last_index);
+}
+
+#[test]
+fn plugin_registers_window_messages_for_public_apps() {
+    let mut app = App::new();
+    app.add_plugins(PixelsPlugin {
+        primary_window: None,
+    });
+
+    assert!(app.world().contains_resource::<Messages<WindowResized>>());
+    assert!(app
+        .world()
+        .contains_resource::<Messages<WindowBackendScaleFactorChanged>>());
 }
