@@ -1,3 +1,6 @@
+test:
+    cargo test --workspace
+
 run EXAMPLE_NAME:
     cargo run --release --package example_{{EXAMPLE_NAME}}
 

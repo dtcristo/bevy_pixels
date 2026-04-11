@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 /// Defines the sizing and behavior of the pixel buffer and surface texture.
-#[derive(Component, Debug, Copy, Clone)]
+#[derive(Component, Debug, Copy, Clone, PartialEq)]
 pub struct PixelsOptions {
     /// Width of the pixel buffer. Changing this after initialization will resize the buffer.
     pub width: u32,
@@ -25,5 +25,21 @@ impl Default for PixelsOptions {
             auto_resize_buffer: true,
             auto_resize_surface: true,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn default_options_match_default_window_size() {
+        let options = PixelsOptions::default();
+
+        assert_eq!(options.width, 1280);
+        assert_eq!(options.height, 720);
+        assert_eq!(options.scale_factor, 1.0);
+        assert!(options.auto_resize_buffer);
+        assert!(options.auto_resize_surface);
     }
 }

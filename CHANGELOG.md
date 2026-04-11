@@ -8,6 +8,7 @@
 - Updated `pixels` to 0.16.
 - Fixed native startup on Bevy 0.18 by using `RawHandleWrapper` directly instead of the removed
   `WinitWindows` non-send resource.
+- Add test coverage.
 
 ## [0.15.0] - 2025-03-28
 
