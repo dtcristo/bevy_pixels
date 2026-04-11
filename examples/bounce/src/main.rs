@@ -94,13 +94,9 @@ fn setup(mut commands: Commands) {
 
 /// Bounce object off edges of buffer.
 fn bounce(
-    options_query: Query<&PixelsOptions>,
+    options: Single<&PixelsOptions>,
     mut query: Query<(&Position, &mut Velocity, &Size, &mut Color)>,
 ) {
-    let Ok(options) = options_query.single() else {
-        return;
-    };
-
     for (position, mut velocity, size, mut color) in &mut query {
         let mut bounce = false;
         if position.x == 0 && velocity.x < 0 {
@@ -129,13 +125,9 @@ fn bounce(
 
 /// Move object based on current velocity.
 fn movement(
-    options_query: Query<&PixelsOptions>,
+    options: Single<&PixelsOptions>,
     mut query: Query<(&mut Position, &Velocity, &Size)>,
 ) {
-    let Ok(options) = options_query.single() else {
-        return;
-    };
-
     for (mut position, velocity, size) in &mut query {
         position.x = ((position.x as i16 + velocity.x) as u32).clamp(0, options.width - size.width);
         position.y =
@@ -144,10 +136,7 @@ fn movement(
 }
 
 /// Draw solid background to buffer.
-fn draw_background(mut wrapper_query: Query<&mut PixelsWrapper>) {
-    let Ok(mut wrapper) = wrapper_query.single_mut() else {
-        return;
-    };
+fn draw_background(mut wrapper: Single<&mut PixelsWrapper>) {
     let frame = wrapper.pixels.frame_mut();
 
     frame.copy_from_slice(&[0x48, 0xb2, 0xe8, 0xff].repeat(frame.len() / 4));
@@ -155,12 +144,10 @@ fn draw_background(mut wrapper_query: Query<&mut PixelsWrapper>) {
 
 /// Draw objects to buffer.
 fn draw_objects(
-    mut wrapper_query: Query<(&mut PixelsWrapper, &PixelsOptions)>,
+    mut wrapper: Single<(&mut PixelsWrapper, &PixelsOptions)>,
     query: Query<(&Position, &Size, &Color)>,
 ) {
-    let Ok((mut wrapper, options)) = wrapper_query.single_mut() else {
-        return;
-    };
+    let (wrapper, options) = &mut *wrapper;
     let frame = wrapper.pixels.frame_mut();
     let frame_width_bytes = (options.width * 4) as usize;
 

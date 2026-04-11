@@ -55,13 +55,10 @@ fn main() {
 }
 ```
 
-Use `PixelsWrapper` in your systems.
+Use Bevy's `Single` system param in systems that target the single-window case.
 
 ```rust
-fn draw(mut wrapper_query: Query<&mut PixelsWrapper>) {
-    // Query the `PixelsWrapper` component that owns an instance of `Pixels` for the given window.
-    let Ok(mut wrapper) = wrapper_query.single_mut() else { return };
-
+fn draw(mut wrapper: Single<&mut PixelsWrapper>) {
     // Get a mutable slice for the pixel buffer.
     let frame: &mut [u8] = wrapper.pixels.frame_mut();
 

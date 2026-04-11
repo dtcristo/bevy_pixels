@@ -11,10 +11,7 @@ fn main() {
 }
 
 /// Draw solid background to window buffer.
-fn draw(mut wrapper_query: Query<&mut PixelsWrapper>) {
-    let Ok(mut wrapper) = wrapper_query.single_mut() else {
-        return;
-    };
+fn draw(mut wrapper: Single<&mut PixelsWrapper>) {
     let frame = wrapper.pixels.frame_mut();
 
     frame.copy_from_slice(&[0x48, 0xb2, 0xe8, 0xff].repeat(frame.len() / 4));
