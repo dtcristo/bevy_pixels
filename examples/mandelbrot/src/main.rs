@@ -2,7 +2,8 @@ use bevy::{
     input::ButtonInput,
     math::DVec2,
     prelude::*,
-    window::{PrimaryWindow, WindowResolution},
+    window::{PresentMode, PrimaryWindow, WindowResolution},
+    winit::WinitSettings,
 };
 use bevy_pixels::prelude::*;
 
@@ -12,6 +13,9 @@ const WINDOW_WIDTH: u32 = (BUFFER_WIDTH as f32 * SCALE_FACTOR) as u32;
 const WINDOW_HEIGHT: u32 = (BUFFER_HEIGHT as f32 * SCALE_FACTOR) as u32;
 const SCALE_FACTOR: f32 = 6.0;
 const MAX_ITERATIONS: u32 = 96;
+const ZOOM_OCTAVES_PER_SECOND: f64 = 1.5;
+const MIN_VIEW_WIDTH: f64 = 0.000_01;
+const MAX_VIEW_WIDTH: f64 = 3.2;
 
 #[derive(Resource, Debug)]
 struct MandelbrotView {
@@ -31,6 +35,7 @@ impl Default for MandelbrotView {
 fn main() {
     App::new()
         .insert_resource(MandelbrotView::default())
+        .insert_resource(WinitSettings::game())
         .add_plugins((
             DefaultPlugins.set(WindowPlugin {
                 primary_window: Some(primary_window()),
@@ -57,6 +62,7 @@ fn primary_window() -> Window {
         return Window {
             title: "Mandelbrot".to_string(),
             resolution: WindowResolution::new(WINDOW_WIDTH, WINDOW_HEIGHT),
+            present_mode: PresentMode::AutoVsync,
             resizable: true,
             fit_canvas_to_parent: true,
             ..default()
@@ -68,6 +74,7 @@ fn primary_window() -> Window {
         Window {
             title: "Mandelbrot".to_string(),
             resolution: WindowResolution::new(WINDOW_WIDTH, WINDOW_HEIGHT),
+            present_mode: PresentMode::AutoVsync,
             resizable: true,
             ..default()
         }
@@ -76,31 +83,33 @@ fn primary_window() -> Window {
 
 fn zoom_view(
     buttons: Res<ButtonInput<MouseButton>>,
+    time: Res<Time>,
     window: Single<(&Window, &PixelsOptions), With<PrimaryWindow>>,
     mut view: ResMut<MandelbrotView>,
 ) {
-    let zoom = if buttons.just_pressed(MouseButton::Left) {
-        0.5
-    } else if buttons.just_pressed(MouseButton::Right) {
-        2.0
-    } else {
-        return;
-    };
+    let zoom_direction =
+        if buttons.pressed(MouseButton::Left) && !buttons.pressed(MouseButton::Right) {
+            -1.0
+        } else if buttons.pressed(MouseButton::Right) && !buttons.pressed(MouseButton::Left) {
+            1.0
+        } else {
+            return;
+        };
 
     let (window, options) = &*window;
-    let Some(cursor) = window.cursor_position() else {
-        return;
-    };
-
     let aspect_ratio = options.height as f64 / options.width as f64;
+    let cursor = window
+        .cursor_position()
+        .unwrap_or(Vec2::new(window.width() * 0.5, window.height() * 0.5));
+    let x_ratio = cursor.x as f64 / window.width() as f64;
+    let y_ratio = cursor.y as f64 / window.height() as f64;
+    let focus = complex_at(&view, x_ratio, y_ratio, aspect_ratio);
+    let zoom_factor =
+        2.0_f64.powf(zoom_direction * ZOOM_OCTAVES_PER_SECOND * time.delta_secs_f64());
+    let new_width = (view.width * zoom_factor).clamp(MIN_VIEW_WIDTH, MAX_VIEW_WIDTH);
 
-    view.center = complex_at(
-        &view,
-        cursor.x as f64 / window.width() as f64,
-        cursor.y as f64 / window.height() as f64,
-        aspect_ratio,
-    );
-    view.width *= zoom;
+    view.center = center_for_focus(focus, x_ratio, y_ratio, new_width, aspect_ratio);
+    view.width = new_width;
 }
 
 fn draw(mut wrapper: Single<(&mut PixelsWrapper, &PixelsOptions)>, view: Res<MandelbrotView>) {
@@ -129,6 +138,20 @@ fn complex_at(view: &MandelbrotView, x_ratio: f64, y_ratio: f64, aspect_ratio: f
     DVec2::new(
         view.center.x + (x_ratio - 0.5) * view.width,
         view.center.y + (0.5 - y_ratio) * height,
+    )
+}
+
+fn center_for_focus(
+    focus: DVec2,
+    x_ratio: f64,
+    y_ratio: f64,
+    width: f64,
+    aspect_ratio: f64,
+) -> DVec2 {
+    let height = width * aspect_ratio;
+    DVec2::new(
+        focus.x - (x_ratio - 0.5) * width,
+        focus.y - (0.5 - y_ratio) * height,
     )
 }
 

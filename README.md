@@ -108,7 +108,7 @@ More advanced example based off the [`minimal-winit`](https://github.com/parasyt
 
 ### [mandelbrot](https://github.com/dtcristo/bevy_pixels/blob/main/examples/mandelbrot/src/main.rs)
 
-Simple colorful fractal example that demonstrates interactive rendering with `bevy_pixels`. Left click zooms in on the clicked point, right click zooms back out, the native window is resizable without changing the zoom level, and the web build fills the browser viewport.
+Simple colorful fractal example that demonstrates interactive rendering with `bevy_pixels`. Hold the left or right mouse button to smoothly zoom in or out around the cursor, the native window is resizable without changing the zoom level, and the web build fills the browser viewport.
 
 ![mandelbrot example](images/mandelbrot.png)
 
