@@ -101,7 +101,7 @@ This example demonstrate usage of multiple windows each with their own pixel buf
 
 ### [custom_render](https://github.com/dtcristo/bevy_pixels/blob/main/examples/custom_render/src/main.rs)
 
-This example demonstrate usage of a custom render system. Default `render` cargo feature must be disabled before defining a custom render system. Use `default-features = "false"` in Cargo.toml.
+This example demonstrate usage of a custom render system. Default `render` cargo feature must be disabled before defining a custom render system. Use `default-features = false` in Cargo.toml.
 
 ### [bounce](https://github.com/dtcristo/bevy_pixels/blob/main/examples/bounce/src/main.rs)
 

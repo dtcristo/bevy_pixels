@@ -23,10 +23,7 @@ use std::time::Instant;
 #[allow(clippy::type_complexity)]
 pub fn create_pixels(
     mut commands: Commands,
-    query: Query<
-        (Entity, &PixelsOptions, &Window, &RawHandleWrapper),
-        (With<RawHandleWrapper>, Without<PixelsWrapper>),
-    >,
+    query: Query<(Entity, &PixelsOptions, &Window, &RawHandleWrapper), Without<PixelsWrapper>>,
     _main_thread: NonSendMarker,
 ) {
     for (entity, options, window, raw_handle_wrapper) in &query {

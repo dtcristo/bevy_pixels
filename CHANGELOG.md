@@ -46,8 +46,8 @@
 
 ### Added
 
-- Added support for defining a custom render system by disabling default `render` cargo feature. Use
-  `default_features = "false"` in Cargo.toml.
+ - Added support for defining a custom render system by disabling default `render` cargo feature. Use
+  `default_features = false` in Cargo.toml.
 
 ### Changed
 

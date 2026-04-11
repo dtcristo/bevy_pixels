@@ -49,6 +49,8 @@ fn main() {
                         (INITIAL_WIDTH as f32 * SCALE_FACTOR) as u32,
                         (INITIAL_HEIGHT as f32 * SCALE_FACTOR) as u32,
                     )
+                    // Keep the requested size in physical pixels so the example stays at a 2x pixel
+                    // scale instead of picking up extra DPI scaling on high-density displays.
                     .with_scale_factor_override(1.0),
                     resize_constraints: WindowResizeConstraints {
                         min_width: INITIAL_WIDTH as f32 * SCALE_FACTOR,
