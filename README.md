@@ -106,6 +106,12 @@ More advanced example based off the [`minimal-winit`](https://github.com/parasyt
 
 ![bounce example](images/bounce.png)
 
+### [mandelbrot](https://github.com/dtcristo/bevy_pixels/blob/main/examples/mandelbrot/src/main.rs)
+
+Simple colorful fractal example that demonstrates interactive rendering with `bevy_pixels`. Left click zooms in on the clicked point, right click zooms back out, the native window is resizable without changing the zoom level, and the web build fills the browser viewport.
+
+![mandelbrot example](images/mandelbrot.png)
+
 ### Running examples natively
 
 Build and run example with [just](https://github.com/casey/just). See [`Justfile`](Justfile) for more details. Install `just` with `cargo install just`.

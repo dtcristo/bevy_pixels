@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added a `mandelbrot` example with interactive mouse-driven zoom.
+
 ### Changed
 
 - Updated `bevy` to 0.18.
