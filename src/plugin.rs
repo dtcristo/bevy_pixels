@@ -1,4 +1,4 @@
-use crate::{diagnostic, prelude::*, system};
+use crate::{diagnostic, prelude::*, synchronization, system};
 
 use bevy::{
     app::MainScheduleOrder,
@@ -54,14 +54,7 @@ impl Plugin for PixelsPlugin {
             .add_schedule(draw_schedule)
             .add_schedule(render_schedule)
             .add_systems(First, system::create_pixels)
-            .add_systems(
-                PreUpdate,
-                (
-                    system::window_change,
-                    system::window_resize,
-                    system::resize_buffer.after(system::window_resize),
-                ),
-            );
+            .add_systems(PreUpdate, synchronization::synchronize);
 
         #[cfg(target_arch = "wasm32")]
         app.add_systems(

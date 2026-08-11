@@ -4,6 +4,7 @@ pub mod schedule;
 
 mod options;
 mod plugin;
+mod synchronization;
 mod system;
 mod wrapper;
 

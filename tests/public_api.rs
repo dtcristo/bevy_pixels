@@ -189,3 +189,99 @@ fn plugin_registers_window_messages_for_public_apps() {
             .contains_resource::<Messages<WindowBackendScaleFactorChanged>>()
     );
 }
+
+#[test]
+fn window_resize_updates_each_automatic_buffer_size_without_a_pixels_wrapper() {
+    let mut app = App::new();
+    app.add_plugins(PixelsPlugin {
+        primary_window: None,
+    });
+
+    let automatic = app
+        .world_mut()
+        .spawn((
+            Window {
+                resolution: bevy::window::WindowResolution::new(640, 480),
+                ..default()
+            },
+            PixelsOptions {
+                scale_factor: 2.0,
+                ..default()
+            },
+        ))
+        .id();
+    let manual = app
+        .world_mut()
+        .spawn((
+            Window {
+                resolution: bevy::window::WindowResolution::new(900, 600),
+                ..default()
+            },
+            PixelsOptions {
+                width: 160,
+                height: 90,
+                scale_factor: 3.0,
+                auto_resize_buffer: false,
+                ..default()
+            },
+        ))
+        .id();
+    let fractional = app
+        .world_mut()
+        .spawn((
+            Window {
+                resolution: bevy::window::WindowResolution::new(641, 479),
+                ..default()
+            },
+            PixelsOptions {
+                scale_factor: 2.0,
+                ..default()
+            },
+        ))
+        .id();
+    let high_dpi = app
+        .world_mut()
+        .spawn((
+            Window {
+                resolution: bevy::window::WindowResolution::new(1280, 720)
+                    .with_scale_factor_override(2.0),
+                ..default()
+            },
+            PixelsOptions {
+                scale_factor: 2.0,
+                ..default()
+            },
+        ))
+        .id();
+
+    app.world_mut().write_message(WindowResized {
+        window: automatic,
+        width: 640.0,
+        height: 480.0,
+    });
+    app.world_mut().write_message(WindowResized {
+        window: manual,
+        width: 900.0,
+        height: 600.0,
+    });
+    app.world_mut().write_message(WindowResized {
+        window: fractional,
+        width: 641.0,
+        height: 479.0,
+    });
+    app.world_mut().write_message(WindowResized {
+        window: high_dpi,
+        width: 640.0,
+        height: 360.0,
+    });
+    app.update();
+
+    let automatic = app.world().get::<PixelsOptions>(automatic).unwrap();
+    assert_eq!((automatic.width, automatic.height), (320, 240));
+    let manual = app.world().get::<PixelsOptions>(manual).unwrap();
+    assert_eq!((manual.width, manual.height), (160, 90));
+    let fractional = app.world().get::<PixelsOptions>(fractional).unwrap();
+    assert_eq!((fractional.width, fractional.height), (320, 239));
+    let high_dpi = app.world().get::<PixelsOptions>(high_dpi).unwrap();
+    assert_eq!((high_dpi.width, high_dpi.height), (320, 180));
+}
