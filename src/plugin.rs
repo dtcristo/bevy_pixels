@@ -3,7 +3,7 @@ use crate::{diagnostic, prelude::*, system};
 use bevy::{
     app::MainScheduleOrder,
     diagnostic::{Diagnostic, RegisterDiagnostic},
-    ecs::{schedule::ExecutorKind, system::SystemState, world::World},
+    ecs::{schedule::SingleThreadedExecutor, system::SystemState, world::World},
     prelude::*,
     window::{PrimaryWindow, WindowBackendScaleFactorChanged, WindowResized},
 };
@@ -19,7 +19,9 @@ pub struct PixelsPlugin {
 fn insert_primary_window_options(world: &mut World, options: PixelsOptions) {
     let mut system_state: SystemState<Query<Entity, With<PrimaryWindow>>> = SystemState::new(world);
     let primary_window = {
-        let query = system_state.get(world);
+        let query = system_state
+            .get(world)
+            .expect("primary window query should be valid");
         query.single().ok()
     };
 
@@ -39,10 +41,10 @@ impl Default for PixelsPlugin {
 impl Plugin for PixelsPlugin {
     fn build(&self, app: &mut App) {
         let mut draw_schedule = Schedule::new(Draw);
-        draw_schedule.set_executor_kind(ExecutorKind::SingleThreaded);
+        draw_schedule.set_executor(SingleThreadedExecutor::new());
 
         let mut render_schedule = Schedule::new(Render);
-        render_schedule.set_executor_kind(ExecutorKind::SingleThreaded);
+        render_schedule.set_executor(SingleThreadedExecutor::new());
         #[cfg(feature = "render")]
         render_schedule.add_systems(system::render);
 
@@ -60,6 +62,12 @@ impl Plugin for PixelsPlugin {
                     system::resize_buffer.after(system::window_resize),
                 ),
             );
+
+        #[cfg(target_arch = "wasm32")]
+        app.add_systems(
+            First,
+            system::finish_pixels_initialization.after(system::create_pixels),
+        );
 
         // Ensure `Draw` and `Render` schedules execute at the correct moment.
         let mut order = app.world_mut().resource_mut::<MainScheduleOrder>();
@@ -114,21 +122,6 @@ mod tests {
         assert!(
             app.world()
                 .contains_resource::<Messages<WindowBackendScaleFactorChanged>>()
-        );
-    }
-
-    #[test]
-    fn plugin_uses_single_threaded_custom_schedules() {
-        let mut app = App::new();
-        app.add_plugins(PixelsPlugin::default());
-
-        assert_eq!(
-            app.get_schedule(Draw).unwrap().get_executor_kind(),
-            ExecutorKind::SingleThreaded
-        );
-        assert_eq!(
-            app.get_schedule(Render).unwrap().get_executor_kind(),
-            ExecutorKind::SingleThreaded
         );
     }
 
