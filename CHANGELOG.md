@@ -1,5 +1,18 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Centralized window-to-pixel size synchronization for consistent behavior across multiple
+  windows.
+
+### Fixed
+
+- Resize the pixel buffer when `PixelsOptions` dimensions change, even when
+  `auto_resize_buffer` is disabled. This option now controls only window-driven buffer sizing.
+- Log buffer and surface resize failures instead of silently discarding them.
+
 ## [0.17.0] - 2026-08-11
 
 ### Changed
