@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.17.0] - 2026-08-11
+
+### Changed
+
+- Updated `bevy` to 0.19.
+- Updated `pixels` to 0.17, including its update from `wgpu` 27 to 29.
+- Raised the minimum supported Rust version to 1.95.
+
+### Fixed
+
+- Initialize `pixels` asynchronously with a supported web texture format without blocking the
+  browser event loop.
+
 ## [0.16.0] - 2026-04-11
 
 ### Added
@@ -161,7 +174,8 @@
 
 Initial release.
 
-[Unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.16.0...HEAD
+[Unreleased]: https://github.com/dtcristo/bevy_pixels/compare/v0.17.0...HEAD
+[0.17.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.17.0
 [0.16.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.16.0
 [0.15.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.15.0
 [0.14.0]: https://github.com/dtcristo/bevy_pixels/releases/tag/v0.14.0
